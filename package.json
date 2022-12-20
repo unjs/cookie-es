@@ -18,10 +18,12 @@
   "scripts": {
     "build": "unbuild",
     "release": "yarn build && standard-version && git push --follow-tags && npm publish",
-    "test": "node test/index.mjs"
+    "test": "vitest run"
   },
   "devDependencies": {
+    "@vitest/coverage-c8": "^0.26.0",
     "standard-version": "latest",
-    "unbuild": "latest"
+    "unbuild": "latest",
+    "vitest": "^0.26.1"
   }
 }
