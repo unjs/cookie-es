@@ -28,7 +28,7 @@ export function parse(
 
   const obj = {};
   const opt = options || {};
-  const pairs = str.split(';');
+  const pairs = str.split(";");
   const dec = opt.decode || decode;
 
   for (const pair of pairs) {
@@ -115,7 +115,7 @@ export function serialize(
   }
 
   if (opt.expires) {
-    if (!isDate(opt.expires) || isNaN(opt.expires.valueOf())) {
+    if (!isDate(opt.expires) || Number.isNaN(opt.expires.valueOf())) {
       throw new TypeError("option expires is invalid");
     }
 
@@ -131,22 +131,23 @@ export function serialize(
   }
 
   if (opt.priority) {
-    var priority = typeof opt.priority === 'string'
-      ? opt.priority.toLowerCase()
-      : opt.priority
+    const priority =
+      typeof opt.priority === "string"
+        ? opt.priority.toLowerCase()
+        : opt.priority;
 
     switch (priority) {
-      case 'low':
-        str += '; Priority=Low'
-        break
-      case 'medium':
-        str += '; Priority=Medium'
-        break
-      case 'high':
-        str += '; Priority=High'
-        break
+      case "low":
+        str += "; Priority=Low";
+        break;
+      case "medium":
+        str += "; Priority=Medium";
+        break;
+      case "high":
+        str += "; Priority=High";
+        break;
       default:
-        throw new TypeError('option priority is invalid')
+        throw new TypeError("option priority is invalid");
     }
   }
 
@@ -184,11 +185,12 @@ export function serialize(
  * @private
  */
 
-function isDate (val) {
-  return Object.prototype.toString.call(val) === '[object Date]' ||
+function isDate(val) {
+  return (
+    Object.prototype.toString.call(val) === "[object Date]" ||
     val instanceof Date
+  );
 }
-
 
 /**
  * Try decoding a string using a decoding function.
@@ -205,7 +207,6 @@ function tryDecode(str, decode) {
   }
 }
 
-
 /**
  * URL-decode string value. Optimized to skip native call when no %.
  *
@@ -213,10 +214,8 @@ function tryDecode(str, decode) {
  * @returns {string}
  */
 
-function decode (str) {
-  return str.indexOf('%') !== -1
-    ? decodeURIComponent(str)
-    : str
+function decode(str) {
+  return str.includes("%") ? decodeURIComponent(str) : str;
 }
 
 /**
@@ -226,6 +225,6 @@ function decode (str) {
  * @returns {string}
  */
 
-function encode (val) {
-  return encodeURIComponent(val)
+function encode(val) {
+  return encodeURIComponent(val);
 }
