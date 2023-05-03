@@ -28,29 +28,42 @@ export function parse(
 
   const obj = {};
   const opt = options || {};
-  const pairs = str.split(";");
   const dec = opt.decode || decode;
 
-  for (const pair of pairs) {
-    let eqIdx = pair.indexOf("=");
+  let index = 0;
+  while (index < str.length) {
+    const eqIdx = str.indexOf("=", index);
 
-    // skip things that don't look like key=value
-    if (eqIdx < 0) {
+    // no more cookie pairs
+    if (eqIdx === -1) {
+      break;
+    }
+
+    let endIdx = str.indexOf(";", index);
+
+    if (endIdx === -1) {
+      endIdx = str.length;
+    } else if (endIdx < eqIdx) {
+      // backtrack on prior semicolon
+      index = str.lastIndexOf(";", eqIdx - 1) + 1;
       continue;
     }
 
-    const key = pair.slice(0, Math.max(0, eqIdx)).trim();
+    const key = str.slice(index, eqIdx).trim();
 
     // only assign once
     if (undefined === obj[key]) {
-      // eslint-disable-next-line unicorn/prefer-string-slice
-      let val = pair.substring(++eqIdx, pair.length).trim();
+      let val = str.slice(eqIdx + 1, endIdx).trim();
+
       // quoted values
-      if (val[0] === '"') {
+      if (val.codePointAt(0) === 0x22) {
         val = val.slice(1, -1);
       }
+
       obj[key] = tryDecode(val, dec);
     }
+
+    index = endIdx + 1;
   }
 
   return obj;
