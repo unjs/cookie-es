@@ -8,7 +8,6 @@ export type { CookieParseOptions, CookieSerializeOptions } from "./types";
 
 const decode = decodeURIComponent;
 const encode = encodeURIComponent;
-const pairSplitRegExp = /; */;
 
 /**
  * RegExp to match field-content in RFC 7230 sec 3.2
@@ -37,7 +36,7 @@ export function parse(
 
   const obj = {};
   const opt = options || {};
-  const pairs = str.split(pairSplitRegExp);
+  const pairs = str.split(';');
   const dec = opt.decode || decode;
 
   for (const pair of pairs) {
