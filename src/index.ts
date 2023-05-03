@@ -5,7 +5,6 @@ export type { CookieParseOptions, CookieSerializeOptions } from "./types";
  * Module letiables.
  * @private
  */
-
 const decode = decodeURIComponent;
 const encode = encodeURIComponent;
 
@@ -123,7 +122,7 @@ export function serialize(
   }
 
   if (opt.expires) {
-    if (typeof opt.expires.toUTCString !== "function") {
+    if (!isDate(opt.expires) || isNaN(opt.expires.valueOf())) {
       throw new TypeError("option expires is invalid");
     }
 
@@ -164,6 +163,19 @@ export function serialize(
 
   return str;
 }
+
+/**
+ * Determine if value is a Date.
+ *
+ * @param {*} val
+ * @private
+ */
+
+function isDate (val) {
+  return Object.prototype.toString.call(val) === '[object Date]' ||
+    val instanceof Date
+}
+
 
 /**
  * Try decoding a string using a decoding function.
