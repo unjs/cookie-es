@@ -20,14 +20,21 @@
   ],
   "scripts": {
     "build": "unbuild",
-    "release": "yarn build && standard-version && git push --follow-tags && npm publish",
-    "test": "vitest run"
+    "dev": "vitest",
+    "lint": "eslint --cache --ext .ts,.js,.mjs,.cjs . && prettier -c src test",
+    "lint:fix": "eslint --cache --ext .ts,.js,.mjs,.cjs . --fix && prettier -c src test -w",
+    "release": "pnpm test && pnpm build && changelogen --release --push && npm publish",
+    "test": "pnpm lint && vitest run --coverage"
   },
   "devDependencies": {
-    "@vitest/coverage-c8": "^0.26.0",
-    "standard-version": "latest",
-    "unbuild": "latest",
-    "vitest": "^0.26.1"
+    "@vitest/coverage-c8": "^0.31.0",
+    "changelogen": "^0.5.3",
+    "eslint": "^8.39.0",
+    "eslint-config-unjs": "^0.1.0",
+    "prettier": "^2.8.8",
+    "typescript": "^5.0.4",
+    "unbuild": "^1.2.1",
+    "vitest": "^0.31.0"
   },
   "packageManager": "pnpm@8.4.0"
 }
