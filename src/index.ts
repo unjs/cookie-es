@@ -101,7 +101,7 @@ export function serialize(
 
   let str = name + "=" + encodedValue;
 
-  if (undefined !== opt.maxAge) {
+  if (undefined !== opt.maxAge && opt.maxAge !== null) {
     const maxAge = opt.maxAge - 0;
 
     if (Number.isNaN(maxAge) || !Number.isFinite(maxAge)) {
