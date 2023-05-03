@@ -48,16 +48,15 @@ export function parse(
     }
 
     const key = pair.slice(0, Math.max(0, eqIdx)).trim();
-    // eslint-disable-next-line unicorn/prefer-string-slice
-    let val = pair.substring(++eqIdx, pair.length).trim();
-
-    // quoted values
-    if (val[0] === '"') {
-      val = val.slice(1, -1);
-    }
 
     // only assign once
     if (undefined === obj[key]) {
+      // eslint-disable-next-line unicorn/prefer-string-slice
+      let val = pair.substring(++eqIdx, pair.length).trim();
+      // quoted values
+      if (val[0] === '"') {
+        val = val.slice(1, -1);
+      }
       obj[key] = tryDecode(val, dec);
     }
   }
