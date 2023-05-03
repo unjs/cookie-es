@@ -2,13 +2,6 @@ import type { CookieParseOptions, CookieSerializeOptions } from "./types";
 export type { CookieParseOptions, CookieSerializeOptions } from "./types";
 
 /**
- * Module letiables.
- * @private
- */
-const decode = decodeURIComponent;
-const encode = encodeURIComponent;
-
-/**
  * RegExp to match field-content in RFC 7230 sec 3.2
  *
  * field-content = field-vchar [ 1*( SP / HTAB ) field-vchar ]
@@ -190,4 +183,29 @@ function tryDecode(str, decode) {
   } catch {
     return str;
   }
+}
+
+
+/**
+ * URL-decode string value. Optimized to skip native call when no %.
+ *
+ * @param {string} str
+ * @returns {string}
+ */
+
+function decode (str) {
+  return str.indexOf('%') !== -1
+    ? decodeURIComponent(str)
+    : str
+}
+
+/**
+ * URL-encode value.
+ *
+ * @param {string} str
+ * @returns {string}
+ */
+
+function encode (val) {
+  return encodeURIComponent(val)
 }
