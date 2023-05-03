@@ -1,5 +1,5 @@
-import type { CookieParseOptions, CookieSerializeOptions } from './types'
-export type { CookieParseOptions, CookieSerializeOptions } from './types'
+import type { CookieParseOptions, CookieSerializeOptions } from "./types";
+export type { CookieParseOptions, CookieSerializeOptions } from "./types";
 
 /**
  * Module letiables.
@@ -17,45 +17,48 @@ const pairSplitRegExp = /; */;
  * field-vchar   = VCHAR / obs-text
  * obs-text      = %x80-FF
  */
-
-const fieldContentRegExp = /^[\u0009\u0020-\u007e\u0080-\u00ff]+$/;
+// eslint-disable-next-line no-control-regex
+const fieldContentRegExp = /^[\u0009\u0020-\u007E\u0080-\u00FF]+$/;
 
 /**
-* Parse an HTTP Cookie header string and returning an object of all cookie
-* name-value pairs.
-*
-* @param str the string representing a `Cookie` header value
-* @param [options] object containing parsing options
-*/
-export function parse(str: string, options?: CookieParseOptions): Record<string, string> {
-  if (typeof str !== 'string') {
-    throw new TypeError('argument str must be a string');
+ * Parse an HTTP Cookie header string and returning an object of all cookie
+ * name-value pairs.
+ *
+ * @param str the string representing a `Cookie` header value
+ * @param [options] object containing parsing options
+ */
+export function parse(
+  str: string,
+  options?: CookieParseOptions
+): Record<string, string> {
+  if (typeof str !== "string") {
+    throw new TypeError("argument str must be a string");
   }
 
-  let obj = {}
-  let opt = options || {};
-  let pairs = str.split(pairSplitRegExp);
-  let dec = opt.decode || decode;
+  const obj = {};
+  const opt = options || {};
+  const pairs = str.split(pairSplitRegExp);
+  const dec = opt.decode || decode;
 
-  for (let i = 0; i < pairs.length; i++) {
-    let pair = pairs[i];
-    let eq_idx = pair.indexOf('=');
+  for (const pair of pairs) {
+    let eqIdx = pair.indexOf("=");
 
     // skip things that don't look like key=value
-    if (eq_idx < 0) {
+    if (eqIdx < 0) {
       continue;
     }
 
-    let key = pair.substr(0, eq_idx).trim()
-    let val = pair.substr(++eq_idx, pair.length).trim();
+    const key = pair.slice(0, Math.max(0, eqIdx)).trim();
+    // eslint-disable-next-line unicorn/prefer-string-slice
+    let val = pair.substring(++eqIdx, pair.length).trim();
 
     // quoted values
-    if ('"' == val[0]) {
+    if (val[0] === '"') {
       val = val.slice(1, -1);
     }
 
     // only assign once
-    if (undefined == obj[key]) {
+    if (undefined === obj[key]) {
       obj[key] = tryDecode(val, dec);
     }
   }
@@ -64,94 +67,100 @@ export function parse(str: string, options?: CookieParseOptions): Record<string,
 }
 
 /**
-* Serialize a cookie name-value pair into a `Set-Cookie` header string.
-*
-* @param name the name for the cookie
-* @param value value to set the cookie to
-* @param [options] object containing serialization options
-* @throws {TypeError} when `maxAge` options is invalid
-*/
-export function serialize(name: string, value: string, options?: CookieSerializeOptions): string {
-  let opt = options || {};
-  let enc = opt.encode || encode;
+ * Serialize a cookie name-value pair into a `Set-Cookie` header string.
+ *
+ * @param name the name for the cookie
+ * @param value value to set the cookie to
+ * @param [options] object containing serialization options
+ * @throws {TypeError} when `maxAge` options is invalid
+ */
+export function serialize(
+  name: string,
+  value: string,
+  options?: CookieSerializeOptions
+): string {
+  const opt = options || {};
+  const enc = opt.encode || encode;
 
-  if (typeof enc !== 'function') {
-    throw new TypeError('option encode is invalid');
+  if (typeof enc !== "function") {
+    throw new TypeError("option encode is invalid");
   }
 
   if (!fieldContentRegExp.test(name)) {
-    throw new TypeError('argument name is invalid');
+    throw new TypeError("argument name is invalid");
   }
 
-  let encodedValue = enc(value);
+  const encodedValue = enc(value);
 
   if (encodedValue && !fieldContentRegExp.test(encodedValue)) {
-    throw new TypeError('argument val is invalid');
+    throw new TypeError("argument val is invalid");
   }
 
-  let str = name + '=' + encodedValue;
+  let str = name + "=" + encodedValue;
 
-  if (null != opt.maxAge) {
-    let maxAge = opt.maxAge - 0;
+  if (undefined !== opt.maxAge) {
+    const maxAge = opt.maxAge - 0;
 
-    if (isNaN(maxAge) || !isFinite(maxAge)) {
-      throw new TypeError('option maxAge is invalid')
+    if (Number.isNaN(maxAge) || !Number.isFinite(maxAge)) {
+      throw new TypeError("option maxAge is invalid");
     }
 
-    str += '; Max-Age=' + Math.floor(maxAge);
+    str += "; Max-Age=" + Math.floor(maxAge);
   }
 
   if (opt.domain) {
     if (!fieldContentRegExp.test(opt.domain)) {
-      throw new TypeError('option domain is invalid');
+      throw new TypeError("option domain is invalid");
     }
 
-    str += '; Domain=' + opt.domain;
+    str += "; Domain=" + opt.domain;
   }
 
   if (opt.path) {
     if (!fieldContentRegExp.test(opt.path)) {
-      throw new TypeError('option path is invalid');
+      throw new TypeError("option path is invalid");
     }
 
-    str += '; Path=' + opt.path;
+    str += "; Path=" + opt.path;
   }
 
   if (opt.expires) {
-    if (typeof opt.expires.toUTCString !== 'function') {
-      throw new TypeError('option expires is invalid');
+    if (typeof opt.expires.toUTCString !== "function") {
+      throw new TypeError("option expires is invalid");
     }
 
-    str += '; Expires=' + opt.expires.toUTCString();
+    str += "; Expires=" + opt.expires.toUTCString();
   }
 
   if (opt.httpOnly) {
-    str += '; HttpOnly';
+    str += "; HttpOnly";
   }
 
   if (opt.secure) {
-    str += '; Secure';
+    str += "; Secure";
   }
 
   if (opt.sameSite) {
-    let sameSite = typeof opt.sameSite === 'string'
-      ? opt.sameSite.toLowerCase() : opt.sameSite;
+    const sameSite =
+      typeof opt.sameSite === "string"
+        ? opt.sameSite.toLowerCase()
+        : opt.sameSite;
 
     switch (sameSite) {
       case true:
-        str += '; SameSite=Strict';
+        str += "; SameSite=Strict";
         break;
-      case 'lax':
-        str += '; SameSite=Lax';
+      case "lax":
+        str += "; SameSite=Lax";
         break;
-      case 'strict':
-        str += '; SameSite=Strict';
+      case "strict":
+        str += "; SameSite=Strict";
         break;
-      case 'none':
-        str += '; SameSite=None';
+      case "none":
+        str += "; SameSite=None";
         break;
       default:
-        throw new TypeError('option sameSite is invalid');
+        throw new TypeError("option sameSite is invalid");
     }
   }
 
@@ -168,7 +177,7 @@ export function serialize(name: string, value: string, options?: CookieSerialize
 function tryDecode(str, decode) {
   try {
     return decode(str);
-  } catch (e) {
+  } catch {
     return str;
   }
 }

@@ -84,7 +84,7 @@ export interface CookieSerializeOptions {
    *
    * *note* This is an attribute that has not yet been fully standardized, and may change in the future. This also means many clients may ignore this attribute until they understand it.
    */
-  sameSite?: true | false | 'lax' | 'strict' | 'none' | undefined;
+  sameSite?: true | false | "lax" | "strict" | "none" | undefined;
   /**
    * Specifies the boolean value for the {@link https://tools.ietf.org/html/rfc6265#section-5.2.5|`Secure` `Set-Cookie` attribute}. When truthy, the
    * `Secure` attribute is set, otherwise it is not. By default, the `Secure` attribute is not set.
@@ -97,8 +97,8 @@ export interface CookieSerializeOptions {
 }
 
 /**
-* Additional parsing options
-*/
+ * Additional parsing options
+ */
 export interface CookieParseOptions {
   /**
    * Specifies a function that will be used to decode a cookie's value. Since
@@ -114,4 +114,3 @@ export interface CookieParseOptions {
    */
   decode?(value: string): string;
 }
-
