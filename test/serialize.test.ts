@@ -261,4 +261,14 @@ describe("serialize(name, value, options)", () => {
       expect(serialize("foo", "bar", { secure: false })).toBe("foo=bar");
     });
   });
+
+  describe('with "partitioned" option', () => {
+    it("should include partitioned flag when true", () => {
+      expect(serialize("foo", "bar", { partitioned: true })).toBe("foo=bar; Partitioned");
+    });
+
+    it("should not include partitioned flag when false", () => {
+      expect(serialize("foo", "bar", { partitioned: false })).toBe("foo=bar");
+    });
+  });
 });
