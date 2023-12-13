@@ -264,7 +264,9 @@ describe("serialize(name, value, options)", () => {
 
   describe('with "partitioned" option', () => {
     it("should include partitioned flag when true", () => {
-      expect(serialize("foo", "bar", { partitioned: true })).toBe("foo=bar; Partitioned");
+      expect(serialize("foo", "bar", { partitioned: true })).toBe(
+        "foo=bar; Partitioned"
+      );
     });
 
     it("should not include partitioned flag when false", () => {

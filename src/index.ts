@@ -150,17 +150,21 @@ export function serialize(
         : opt.priority;
 
     switch (priority) {
-      case "low":
+      case "low": {
         str += "; Priority=Low";
         break;
-      case "medium":
+      }
+      case "medium": {
         str += "; Priority=Medium";
         break;
-      case "high":
+      }
+      case "high": {
         str += "; Priority=High";
         break;
-      default:
+      }
+      default: {
         throw new TypeError("option priority is invalid");
+      }
     }
   }
 
@@ -171,25 +175,30 @@ export function serialize(
         : opt.sameSite;
 
     switch (sameSite) {
-      case true:
+      case true: {
         str += "; SameSite=Strict";
         break;
-      case "lax":
+      }
+      case "lax": {
         str += "; SameSite=Lax";
         break;
-      case "strict":
+      }
+      case "strict": {
         str += "; SameSite=Strict";
         break;
-      case "none":
+      }
+      case "none": {
         str += "; SameSite=None";
         break;
-      default:
+      }
+      default: {
         throw new TypeError("option sameSite is invalid");
+      }
     }
   }
 
   if (opt.partitioned) {
-    str += "; Partitioned"
+    str += "; Partitioned";
   }
 
   return str;
