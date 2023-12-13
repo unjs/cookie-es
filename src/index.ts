@@ -188,6 +188,10 @@ export function serialize(
     }
   }
 
+  if (opt.partitioned) {
+    str += "; Partitioned"
+  }
+
   return str;
 }
 

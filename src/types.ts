@@ -108,6 +108,14 @@ export interface CookieSerializeOptions {
    * not have an HTTPS connection.
    */
   secure?: boolean | undefined;
+  /**
+   * Cookies Having Independent Partitioned State (CHIPS, also known as Partitioned cookies) 
+   * allows developers to opt a cookie into partitioned storage, with a separate 
+   * cookie jar per top-level site.
+   * 
+   * @see https://developer.mozilla.org/en-US/docs/Web/Privacy/Partitioned_cookies
+   */
+  partitioned?: boolean;
 }
 
 /**
