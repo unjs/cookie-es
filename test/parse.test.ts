@@ -4,7 +4,7 @@ import { parse } from "../src";
 describe("cookie.parse(str)", () => {
   it("should throw with no arguments", () => {
     expect(() => parse(undefined as any)).throws(
-      /argument str must be a string/
+      /argument str must be a string/,
     );
   });
 
@@ -66,7 +66,7 @@ describe("cookie.parse(str, options)", () => {
           decode: (v) => {
             return Buffer.from(v, "base64").toString();
           },
-        })
+        }),
       ).toMatchObject({ foo: "bar" });
     });
   });

@@ -20,7 +20,7 @@ const fieldContentRegExp = /^[\u0009\u0020-\u007E\u0080-\u00FF]+$/;
  */
 export function parse(
   str: string,
-  options?: CookieParseOptions
+  options?: CookieParseOptions,
 ): Record<string, string> {
   if (typeof str !== "string") {
     throw new TypeError("argument str must be a string");
@@ -80,7 +80,7 @@ export function parse(
 export function serialize(
   name: string,
   value: string,
-  options?: CookieSerializeOptions
+  options?: CookieSerializeOptions,
 ): string {
   const opt = options || {};
   const enc = opt.encode || encode;
@@ -150,17 +150,21 @@ export function serialize(
         : opt.priority;
 
     switch (priority) {
-      case "low":
+      case "low": {
         str += "; Priority=Low";
         break;
-      case "medium":
+      }
+      case "medium": {
         str += "; Priority=Medium";
         break;
-      case "high":
+      }
+      case "high": {
         str += "; Priority=High";
         break;
-      default:
+      }
+      default: {
         throw new TypeError("option priority is invalid");
+      }
     }
   }
 
@@ -171,20 +175,25 @@ export function serialize(
         : opt.sameSite;
 
     switch (sameSite) {
-      case true:
+      case true: {
         str += "; SameSite=Strict";
         break;
-      case "lax":
+      }
+      case "lax": {
         str += "; SameSite=Lax";
         break;
-      case "strict":
+      }
+      case "strict": {
         str += "; SameSite=Strict";
         break;
-      case "none":
+      }
+      case "none": {
         str += "; SameSite=None";
         break;
-      default:
+      }
+      default: {
         throw new TypeError("option sameSite is invalid");
+      }
     }
   }
 
