@@ -22,12 +22,13 @@
     "build": "unbuild",
     "dev": "vitest",
     "lint": "eslint --cache --ext .ts,.js,.mjs,.cjs . && prettier -c src test",
-    "lint:fix": "eslint --cache --ext .ts,.js,.mjs,.cjs . --fix && prettier -c src test -w",
+    "lint:fix": "automd && eslint --cache --ext .ts,.js,.mjs,.cjs . --fix && prettier -c src test -w",
     "release": "pnpm test && pnpm build && changelogen --release --push && npm publish",
     "test": "pnpm lint && vitest run --coverage"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^1.4.0",
+    "automd": "^0.3.7",
     "changelogen": "^0.5.5",
     "eslint": "^8.57.0",
     "eslint-config-unjs": "^0.2.1",
