@@ -20,7 +20,7 @@ const fieldContentRegExp = /^[\u0009\u0020-\u007E\u0080-\u00FF]+$/;
  */
 export function parse(
   str: string,
-  options?: CookieParseOptions
+  options?: CookieParseOptions,
 ): Record<string, string> {
   if (typeof str !== "string") {
     throw new TypeError("argument str must be a string");
@@ -80,7 +80,7 @@ export function parse(
 export function serialize(
   name: string,
   value: string,
-  options?: CookieSerializeOptions
+  options?: CookieSerializeOptions,
 ): string {
   const opt = options || {};
   const enc = opt.encode || encode;
