@@ -109,11 +109,14 @@ export interface CookieSerializeOptions {
    */
   secure?: boolean | undefined;
   /**
-   * Cookies Having Independent Partitioned State (CHIPS, also known as Partitioned cookies)
-   * allows developers to opt a cookie into partitioned storage, with a separate
-   * cookie jar per top-level site.
+   * Specifies the `boolean` value for the [`Partitioned` `Set-Cookie`](rfc-cutler-httpbis-partitioned-cookies)
+   * attribute. When truthy, the `Partitioned` attribute is set, otherwise it is not. By default, the
+   * `Partitioned` attribute is not set.
    *
-   * @see https://developer.mozilla.org/en-US/docs/Web/Privacy/Partitioned_cookies
+   * **note** This is an attribute that has not yet been fully standardized, and may change in the future.
+   * This also means many clients may ignore this attribute until they understand it.
+   *
+   * More information about can be found in [the proposal](https://github.com/privacycg/CHIPS)
    */
   partitioned?: boolean;
 }
