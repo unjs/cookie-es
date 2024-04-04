@@ -37,9 +37,9 @@ describe("cookie.parse(str)", () => {
     expect(parse("foo=%1;bar=bar")).toMatchObject({ foo: "%1", bar: "bar" });
   });
 
-  it("should ignore cookies without value", () => {
-    expect(parse("foo=bar;fizz  ;  buzz")).toMatchObject({ foo: "bar" });
-    expect(parse("  fizz; foo=  bar")).toMatchObject({ foo: "bar" });
+  it("should not ignore cookies without value", () => {
+    expect(parse("foo=bar;fizz  ;  buzz")).toMatchObject({ foo: "bar", fizz: true, buzz: true });
+    expect(parse("  fizz; foo=  bar")).toMatchObject({ fizz: true, foo: "bar"  });
   });
 
   it("should ignore duplicate cookies", () => {
