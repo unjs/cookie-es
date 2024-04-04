@@ -44,8 +44,8 @@ export function parse(
     if (endIdx === -1) {
       endIdx = str.length;
     } else if (endIdx < eqIdx) {
-      // backtrack on prior semicolon
-      index = str.lastIndexOf(";", eqIdx - 1) + 1;
+      obj[str.substring(index + 1, endIdx)] = true
+      index = str.indexOf(";", endIdx) + 1;
       continue;
     }
 
