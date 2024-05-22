@@ -138,4 +138,8 @@ export interface CookieParseOptions {
    * cookie value will be returned as the cookie's value.
    */
   decode?(value: string): string;
+  /**
+   * Custom function to filter parsing specific keys.
+   */
+  filter?(key: string): boolean;
 }
