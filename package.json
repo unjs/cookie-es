@@ -27,6 +27,7 @@
     "test": "pnpm lint && vitest run --coverage"
   },
   "devDependencies": {
+    "@types/node": "^20.12.12",
     "@vitest/coverage-v8": "^1.5.1",
     "automd": "^0.3.7",
     "changelogen": "^0.5.5",

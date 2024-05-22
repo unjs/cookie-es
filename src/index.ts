@@ -60,7 +60,7 @@ export function parse(
         val = val.slice(1, -1);
       }
 
-      obj[key] = tryDecode(val, dec);
+      obj[key] = tryDecode(val, dec, key);
     }
 
     index = endIdx + 1;
@@ -220,14 +220,14 @@ function isDate(val) {
 
 /**
  * Try decoding a string using a decoding function.
- *
  * @param {string} str
  * @param {function} decode
+ * @param {string} [key]
  * @private
  */
-function tryDecode(str, decode) {
+function tryDecode(str, decode, key) {
   try {
-    return decode(str);
+    return decode.length == 2 ? decode(str, key) : decode(str)
   } catch {
     return str;
   }

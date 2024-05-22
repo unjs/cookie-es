@@ -63,7 +63,8 @@ describe("cookie.parse(str, options)", () => {
     it("should specify alternative value decoder", () => {
       expect(
         parse('foo="YmFy"', {
-          decode: (v) => {
+          decode: (v, k) => {
+            expect(k).toBe("foo");
             return Buffer.from(v, "base64").toString();
           },
         }),
