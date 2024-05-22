@@ -139,9 +139,7 @@ export interface CookieParseOptions {
    */
   decode?(value: string): string;
   /**
-   * Select whether to filter the key, similar to array.filter
-   * true: key is not filtered, 
-   * false: key is filtered. 
+   * Custom function to filter parsing specific keys.
    */
   filter?(key: string): boolean;
 }
