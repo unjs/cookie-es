@@ -71,12 +71,13 @@ describe("cookie.parse(str, options)", () => {
     });
 
     it("parse filter key", () => {
-      expect(parse("a=1;b=2", {
-        filter: (key) => key === "a"
-      })).toMatchObject({ a: "1" });
+      expect(
+        parse("a=1;b=2", {
+          filter: (key) => key === "a",
+        }),
+      ).toMatchObject({ a: "1" });
 
-      expect(parse("a=1;b=2"))
-        .toMatchObject({ a: "1", b: "2" });
-    })
+      expect(parse("a=1;b=2")).toMatchObject({ a: "1", b: "2" });
+    });
   });
 });
