@@ -21,21 +21,21 @@
   "scripts": {
     "build": "unbuild",
     "dev": "vitest",
-    "lint": "eslint --cache --ext .ts,.js,.mjs,.cjs . && prettier -c src test",
-    "lint:fix": "automd && eslint --cache --ext .ts,.js,.mjs,.cjs . --fix && prettier -c src test -w",
+    "lint": "eslint --cache . && prettier -c src test",
+    "lint:fix": "automd && eslint --cache . --fix && prettier -c src test -w",
     "release": "pnpm test && pnpm build && changelogen --release --push && npm publish",
     "test": "pnpm lint && vitest run --coverage"
   },
   "devDependencies": {
-    "@vitest/coverage-v8": "^1.5.1",
+    "@vitest/coverage-v8": "^1.6.0",
     "automd": "^0.3.7",
     "changelogen": "^0.5.5",
-    "eslint": "^8.57.0",
-    "eslint-config-unjs": "^0.2.1",
+    "eslint": "^9.3.0",
+    "eslint-config-unjs": "^0.3.1",
     "prettier": "^3.2.5",
     "typescript": "^5.4.5",
     "unbuild": "^2.0.0",
-    "vitest": "^1.5.1"
+    "vitest": "^1.6.0"
   },
   "packageManager": "pnpm@9.0.6"
 }
