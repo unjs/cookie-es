@@ -227,7 +227,7 @@ function isDate(val) {
  */
 function tryDecode(str, decode, key) {
   try {
-    return decode.length == 2 ? decode(str, key) : decode(str)
+    return decode.length === 2 ? decode(str, key) : decode(str)
   } catch {
     return str;
   }
