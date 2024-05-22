@@ -116,7 +116,7 @@ export interface CookieSerializeOptions {
    * **note** This is an attribute that has not yet been fully standardized, and may change in the future.
    * This also means many clients may ignore this attribute until they understand it.
    *
-   * More information can be found in {@link https://github.com/privacycg/CHIPS|the proposal}.
+   * More information can be found in the {@link https://github.com/privacycg/CHIPS|proposal}.
    */
   partitioned?: boolean;
 }
