@@ -136,7 +136,7 @@ export interface CookieParseOptions {
    *
    * *Note* if an error is thrown from this function, the original, non-decoded
    * cookie value will be returned as the cookie's value.
-   * 
+   *
    * *Explain*: callback key is added to facilitate upper-layer filtering of decode
    */
   decode?(value: string, key?: string): string;
