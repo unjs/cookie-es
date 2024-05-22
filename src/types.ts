@@ -138,4 +138,10 @@ export interface CookieParseOptions {
    * cookie value will be returned as the cookie's value.
    */
   decode?(value: string): string;
+  /**
+   * Select whether to filter the key, similar to array.filter
+   * true: key is not filtered, 
+   * false: key is filtered. 
+   */
+  filter?(key: string): boolean;
 }

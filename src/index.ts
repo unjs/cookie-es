@@ -50,6 +50,10 @@ export function parse(
     }
 
     const key = str.slice(index, eqIdx).trim();
+    if (opt?.filter && !opt?.filter(key)) {
+      index = endIdx + 1;
+      continue;
+    }
 
     // only assign once
     if (undefined === obj[key]) {
