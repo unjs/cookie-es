@@ -1,10 +1,6 @@
-/**
- * Based on https://github.com/nfriedly/set-cookie-parser (MIT) - 2.6.0 830debeeeec2ee21a36256bdef66485879dd18cd
- *
- * Copyright (c) 2015 Nathan Friedly <nathan@nfriedly.com> (http://nfriedly.com/)
- *
- * (See main LICENSE file for full license)
- */
+// Based on https://github.com/nfriedly/set-cookie-parser (MIT)
+// Copyright (c) 2015 Nathan Friedly <nathan@nfriedly.com> (http://nfriedly.com/)
+// Last sync: v2.6.0 830debeeeec2ee21a36256bdef66485879dd18cd
 
 import type { SetCookie, SetCookieParseOptions } from "./types";
 
@@ -15,7 +11,7 @@ export function parseSetCookie(
   setCookieValue: string,
   options?: SetCookieParseOptions,
 ): SetCookie {
-  const parts = setCookieValue
+  const parts = (setCookieValue || "")
     .split(";")
     .filter((str) => typeof str === "string" && !!str.trim());
 
@@ -26,7 +22,10 @@ export function parseSetCookie(
 
   let value = parsed.value;
   try {
-    value = (options?.decode || decodeURIComponent)(value);
+    value =
+      options?.decode === false
+        ? value
+        : (options?.decode || decodeURIComponent)(value);
   } catch {
     // Fallback to undecoded value
   }

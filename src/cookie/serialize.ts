@@ -1,11 +1,7 @@
-/**
- * Based on https://github.com/jshttp/cookie (MIT) - 84a156749b673dbfbf43679829b15be09fbd8988
- *
- * Copyright (c) 2012-2014 Roman Shtylman <shtylman@gmail.com>
- * Copyright (c) 2015 Douglas Christopher Wilson <doug@somethingdoug.com>
- *
- * (See main LICENSE file for full license)
- */
+// Based on https://github.com/jshttp/cookie (MIT)
+// Copyright (c) 2012-2014 Roman Shtylman <shtylman@gmail.com>
+// Copyright (c) 2015 Douglas Christopher Wilson <doug@somethingdoug.com>
+// Last sync: 84a156749b673dbfbf43679829b15be09fbd8988
 
 import type { CookieSerializeOptions } from "./types";
 export type { CookieParseOptions, CookieSerializeOptions } from "./types";

@@ -6,7 +6,7 @@ export interface SetCookieParseOptions {
    *
    * **Note:** If decoding fails, the original (undecoded) value will be used
    */
-  decode?: (value: string) => string;
+  decode?: false | ((value: string) => string);
 }
 
 export interface SetCookie {
