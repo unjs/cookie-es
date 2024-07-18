@@ -1,5 +1,5 @@
 
-# cookie-es
+# 🍪 cookie-es
 
 <!-- automd:badges bundlejs -->
 
@@ -9,7 +9,15 @@
 
 <!-- /automd -->
 
-ESM build of [cookie](https://www.npmjs.com/package/cookie) with bundled types.
+Cookie utils:
+
+- 🍪 [`Cookie`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cookie) parser and serializer based on [cookie](https://github.com/jshttp/cookiee).
+- 🍪 [`Set-Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie) parser based on [set-cookie-parser](https://github.com/nfriedly/set-cookie-parser).
+
+With:
+
+- 📦 Dual ESM/CJS exports
+- 🎁 Bundled types
 
 ## Usage
 
