@@ -57,7 +57,7 @@ export function parseSetCookie(
         break;
       }
       case "samesite": {
-        cookie.sameSite = partValue;
+        cookie.sameSite = partValue as SetCookie["sameSite"];
         break;
       }
       default: {
