@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.2.1
+
+[compare changes](https://github.com/unjs/cookie-es/compare/v1.2.0...v1.2.1)
+
+### 🩹 Fixes
+
+- **set-cookie:** Compatible `sameSite` type with parse ([2d1c70e](https://github.com/unjs/cookie-es/commit/2d1c70e))
+
+### ❤️ Contributors
+
+- Pooya Parsa ([@pi0](http://github.com/pi0))
+
 ## v1.2.0
 
 [compare changes](https://github.com/unjs/cookie-es/compare/v1.1.0...v1.2.0)

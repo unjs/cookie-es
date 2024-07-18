@@ -1,6 +1,6 @@
 {
   "name": "cookie-es",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "repository": "unjs/cookie-es",
   "license": "MIT",
   "sideEffects": false,
