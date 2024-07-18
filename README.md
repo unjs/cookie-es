@@ -44,19 +44,34 @@ Import:
 **ESM** (Node.js, Bun)
 
 ```js
-import { parse, serialize } from "cookie-es";
+import {
+  parse,
+  serialize,
+  parseSetCookie,
+  splitSetCookieString,
+} from "cookie-es";
 ```
 
 **CommonJS** (Legacy Node.js)
 
 ```js
-const { parse, serialize } = require("cookie-es");
+const {
+  parse,
+  serialize,
+  parseSetCookie,
+  splitSetCookieString,
+} = require("cookie-es");
 ```
 
 **CDN** (Deno, Bun and Browsers)
 
 ```js
-import { parse, serialize } from "https://esm.sh/cookie-es";
+import {
+  parse,
+  serialize,
+  parseSetCookie,
+  splitSetCookieString,
+} from "https://esm.sh/cookie-es";
 ```
 
 <!-- /automd -->
