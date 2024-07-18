@@ -1,3 +1,8 @@
+// Based on https://github.com/jshttp/cookie (MIT)
+// Copyright (c) 2012-2014 Roman Shtylman <shtylman@gmail.com>
+// Copyright (c) 2015 Douglas Christopher Wilson <doug@somethingdoug.com>
+// Last sync: 84a156749b673dbfbf43679829b15be09fbd8988
+
 import { describe, it, expect } from "vitest";
 import { parse } from "../src";
 
@@ -64,7 +69,7 @@ describe("cookie.parse(str, options)", () => {
       expect(
         parse('foo="YmFy"', {
           decode: (v) => {
-            return Buffer.from(v, "base64").toString();
+            return atob(v);
           },
         }),
       ).toMatchObject({ foo: "bar" });

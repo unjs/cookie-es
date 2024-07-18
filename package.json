@@ -20,7 +20,7 @@
   ],
   "scripts": {
     "build": "unbuild",
-    "dev": "vitest",
+    "dev": "vitest --coverage",
     "lint": "eslint --cache . && prettier -c src test",
     "lint:fix": "automd && eslint --cache . --fix && prettier -c src test -w",
     "release": "pnpm test && pnpm build && changelogen --release --push && npm publish",

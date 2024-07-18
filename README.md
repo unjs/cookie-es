@@ -1,5 +1,5 @@
 
-# cookie-es
+# 🍪 cookie-es
 
 <!-- automd:badges bundlejs -->
 
@@ -9,7 +9,7 @@
 
 <!-- /automd -->
 
-ESM build of [cookie](https://www.npmjs.com/package/cookie) with bundled types.
+🍪 [`Cookie`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cookie) and [`Set-Cookie`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie) parser and serializer based on [cookie](https://github.com/jshttp/cookiee) and [set-cookie-parser](https://github.com/nfriedly/set-cookie-parser) with dual ESM/CJS exports and bundled types. 🎁
 
 ## Usage
 
@@ -44,19 +44,34 @@ Import:
 **ESM** (Node.js, Bun)
 
 ```js
-import { parse, serialize } from "cookie-es";
+import {
+  parse,
+  serialize,
+  parseSetCookie,
+  splitSetCookieString,
+} from "cookie-es";
 ```
 
 **CommonJS** (Legacy Node.js)
 
 ```js
-const { parse, serialize } = require("cookie-es");
+const {
+  parse,
+  serialize,
+  parseSetCookie,
+  splitSetCookieString,
+} = require("cookie-es");
 ```
 
 **CDN** (Deno, Bun and Browsers)
 
 ```js
-import { parse, serialize } from "https://esm.sh/cookie-es";
+import {
+  parse,
+  serialize,
+  parseSetCookie,
+  splitSetCookieString,
+} from "https://esm.sh/cookie-es";
 ```
 
 <!-- /automd -->
