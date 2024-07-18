@@ -49,6 +49,7 @@ describe("serialize(name, value, options)", () => {
       expect(
         serialize("foo", "bar", {
           encode: (v) => {
+            // @ts-expect-error
             return Buffer.from(v, "utf8").toString("base64");
           },
         }),
