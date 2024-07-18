@@ -64,7 +64,7 @@ describe("cookie.parse(str, options)", () => {
       expect(
         parse('foo="YmFy"', {
           decode: (v) => {
-            return Buffer.from(v, "base64").toString();
+            return atob(v);
           },
         }),
       ).toMatchObject({ foo: "bar" });
