@@ -1,6 +1,35 @@
 # Changelog
 
 
+## v1.2.0
+
+[compare changes](https://github.com/unjs/cookie-es/compare/v1.1.0...v1.2.0)
+
+### 🚀 Enhancements
+
+- **parse:** Support `filter` option for key filtering ([#35](https://github.com/unjs/cookie-es/pull/35))
+- Add utils to parse `set-cookie` ([#43](https://github.com/unjs/cookie-es/pull/43))
+
+### 📖 Documentation
+
+- Fix links for `partitioned` attribute of `CookieSerializeOptions` ([#34](https://github.com/unjs/cookie-es/pull/34))
+
+### 📦 Build
+
+- Fix type exports ([f8c35c3](https://github.com/unjs/cookie-es/commit/f8c35c3))
+
+### 🏡 Chore
+
+- Update repo ([b558f84](https://github.com/unjs/cookie-es/commit/b558f84))
+- Apply automated updates ([abad077](https://github.com/unjs/cookie-es/commit/abad077))
+- Update deps ([1b3631a](https://github.com/unjs/cookie-es/commit/1b3631a))
+
+### ❤️ Contributors
+
+- Pooya Parsa ([@pi0](http://github.com/pi0))
+- Potter <75838259@qq.com>
+- Damian Głowala ([@DamianGlowala](http://github.com/DamianGlowala))
+
 ## v1.1.0
 
 [compare changes](https://github.com/unjs/cookie-es/compare/v1.0.0...v1.1.0)
