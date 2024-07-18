@@ -9,15 +9,7 @@
 
 <!-- /automd -->
 
-Cookie utils:
-
-- 🍪 [`Cookie`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cookie) parser and serializer based on [cookie](https://github.com/jshttp/cookiee).
-- 🍪 [`Set-Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie) parser based on [set-cookie-parser](https://github.com/nfriedly/set-cookie-parser).
-
-With:
-
-- 📦 Dual ESM/CJS exports
-- 🎁 Bundled types
+🍪 [`Cookie`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cookie) and [`Set-Cookie`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie) parser and serializer based on [cookie](https://github.com/jshttp/cookiee) and [set-cookie-parser](https://github.com/nfriedly/set-cookie-parser) with dual ESM/CJS exports and bundled types. 🎁
 
 ## Usage
 
