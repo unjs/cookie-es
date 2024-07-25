@@ -1,6 +1,23 @@
 # Changelog
 
 
+## v1.2.2
+
+[compare changes](https://github.com/unjs/cookie-es/compare/v1.2.1...v1.2.2)
+
+### 🩹 Fixes
+
+- Parse filter code lose ([#47](https://github.com/unjs/cookie-es/pull/47))
+
+### 🏡 Chore
+
+- Update jshttp link ([#46](https://github.com/unjs/cookie-es/pull/46))
+
+### ❤️ Contributors
+
+- Potter <75838259@qq.com>
+- Alexander Brandmüller <eder.alexan@gmail.com>
+
 ## v1.2.1
 
 [compare changes](https://github.com/unjs/cookie-es/compare/v1.2.0...v1.2.1)
