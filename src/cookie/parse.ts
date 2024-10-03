@@ -62,7 +62,7 @@ export function parse(
     if (allowMultiple) {
       if (obj[key] === undefined) {
         obj[key] = val; // first occurrence, assign as string
-      } else if (typeof obj[key] === 'string') {
+      } else if (typeof obj[key] === "string") {
         obj[key] = [obj[key], val]; // convert string to array
       } else {
         (obj[key] as string[]).push(val); // append to array

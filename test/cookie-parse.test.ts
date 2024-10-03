@@ -63,16 +63,22 @@ describe("cookie.parse(str)", () => {
   });
 
   it("should return duplicated cookies values if `allowMultiple` is set", () => {
-    expect(parse("foo=%1;bar=bar;foo=boo", { allowMultiple: true })).toMatchObject({
-      foo: ["%1","boo"],
+    expect(
+      parse("foo=%1;bar=bar;foo=boo", { allowMultiple: true }),
+    ).toMatchObject({
+      foo: ["%1", "boo"],
       bar: "bar",
     });
-    expect(parse("foo=false;bar=bar;foo=true", { allowMultiple: true })).toMatchObject({
-      foo: ["false","true"],
+    expect(
+      parse("foo=false;bar=bar;foo=true", { allowMultiple: true }),
+    ).toMatchObject({
+      foo: ["false", "true"],
       bar: "bar",
     });
-    expect(parse("foo=;bar=bar;foo=boo", { allowMultiple: true })).toMatchObject({
-      foo: ["","boo"],
+    expect(
+      parse("foo=;bar=bar;foo=boo", { allowMultiple: true }),
+    ).toMatchObject({
+      foo: ["", "boo"],
       bar: "bar",
     });
   });
