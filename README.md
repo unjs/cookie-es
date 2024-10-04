@@ -32,6 +32,9 @@ pnpm install cookie-es
 
 # bun
 bun install cookie-es
+
+# deno
+deno install cookie-es
 ```
 
 <!-- /automd-->
@@ -41,7 +44,7 @@ Import:
 
 <!-- automd:jsimport cdn cjs src=./src/index.ts -->
 
-**ESM** (Node.js, Bun)
+**ESM** (Node.js, Bun, Deno)
 
 ```js
 import {
