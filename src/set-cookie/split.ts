@@ -76,7 +76,7 @@ export function splitSetCookieString(
     }
 
     if (!cookiesSeparatorFound || pos >= cookiesString.length) {
-      cookiesStrings.push(cookiesString.slice(start, cookiesString.length));
+      cookiesStrings.push(cookiesString.slice(start));
     }
   }
 
