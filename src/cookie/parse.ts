@@ -14,12 +14,12 @@ import type { CookieParseOptions } from "./types";
 export function parse(
   str: string,
   options?: CookieParseOptions,
-): Record<string, string | string[]> {
+): Record<string, string> {
   if (typeof str !== "string") {
     throw new TypeError("argument str must be a string");
   }
 
-  const obj: Record<string, string | string[]> = {};
+  const obj: Record<string, string> = {};
   const opt = options || {};
   const dec = opt.decode || decode;
   const allowMultiple = opt.allowMultiple || false;
@@ -60,13 +60,8 @@ export function parse(
 
     // handle multiple values for the same key
     if (allowMultiple) {
-      if (obj[key] === undefined) {
-        obj[key] = val; // first occurrence, assign as string
-      } else if (typeof obj[key] === "string") {
-        obj[key] = [obj[key], val]; // convert string to array
-      } else {
-        (obj[key] as string[]).push(val); // append to array
-      }
+      obj[key] =
+        obj[key] === undefined || obj[key] === "" ? val : `${obj[key]},${val}`;
     } else {
       if (obj[key] === undefined) {
         obj[key] = val;

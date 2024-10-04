@@ -66,19 +66,19 @@ describe("cookie.parse(str)", () => {
     expect(
       parse("foo=%1;bar=bar;foo=boo", { allowMultiple: true }),
     ).toMatchObject({
-      foo: ["%1", "boo"],
+      foo: "%1,boo",
       bar: "bar",
     });
     expect(
       parse("foo=false;bar=bar;foo=true", { allowMultiple: true }),
     ).toMatchObject({
-      foo: ["false", "true"],
+      foo: "false,true",
       bar: "bar",
     });
     expect(
       parse("foo=;bar=bar;foo=boo", { allowMultiple: true }),
     ).toMatchObject({
-      foo: ["", "boo"],
+      foo: "boo",
       bar: "bar",
     });
   });
