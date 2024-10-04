@@ -59,6 +59,7 @@ export function parse(
     val = tryDecode(val, dec);
 
     // handle multiple values for the same key
+    // TODO: enable by default in v2
     if (allowMultiple) {
       obj[key] =
         obj[key] === undefined || obj[key] === "" ? val : `${obj[key]},${val}`;
