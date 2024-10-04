@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^2.1.2",
-    "automd": "^0.3.9",
+    "automd": "^0.3.10",
     "changelogen": "^0.5.7",
     "eslint": "^9.11.1",
     "eslint-config-unjs": "^0.4.1",

@@ -4,7 +4,7 @@
 <!-- automd:badges bundlejs -->
 
 [![npm version](https://img.shields.io/npm/v/cookie-es)](https://npmjs.com/package/cookie-es)
-[![npm downloads](https://img.shields.io/npm/dm/cookie-es)](https://npmjs.com/package/cookie-es)
+[![npm downloads](https://img.shields.io/npm/dm/cookie-es)](https://npm.chart.dev/cookie-es)
 [![bundle size](https://img.shields.io/bundlejs/size/cookie-es)](https://bundlejs.com/?q=cookie-es)
 
 <!-- /automd -->
