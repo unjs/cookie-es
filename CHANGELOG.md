@@ -1,6 +1,32 @@
 # Changelog
 
 
+## v2.0.0
+
+[compare changes](https://github.com/unjs/cookie-es/compare/v1.2.2...v2.0.0)
+
+### 📦 Build
+
+- ⚠️  Esm-only dist ([ec71b10](https://github.com/unjs/cookie-es/commit/ec71b10))
+
+### 🏡 Chore
+
+- Lint ([8145628](https://github.com/unjs/cookie-es/commit/8145628))
+- Update deps ([90b3705](https://github.com/unjs/cookie-es/commit/90b3705))
+- Apply automated updates ([2ec765a](https://github.com/unjs/cookie-es/commit/2ec765a))
+- Update automd ([bac21a6](https://github.com/unjs/cookie-es/commit/bac21a6))
+- Update deps ([9c768f9](https://github.com/unjs/cookie-es/commit/9c768f9))
+- Update ci ([ab64740](https://github.com/unjs/cookie-es/commit/ab64740))
+- Update readme ([c639c55](https://github.com/unjs/cookie-es/commit/c639c55))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Esm-only dist ([ec71b10](https://github.com/unjs/cookie-es/commit/ec71b10))
+
+### ❤️ Contributors
+
+- Pooya Parsa ([@pi0](https://github.com/pi0))
+
 ## v1.2.2
 
 [compare changes](https://github.com/unjs/cookie-es/compare/v1.2.1...v1.2.2)
