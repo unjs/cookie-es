@@ -1,11 +1,10 @@
-import { defineBuildConfig } from 'unbuild'
+import { rm } from "node:fs/promises";
+import { defineBuildConfig } from "unbuild";
 
 export default defineBuildConfig({
-  declaration: true,
-  rollup: {
-    emitCJS: true
+  hooks: {
+    async "build:done"() {
+      await rm("dist/index.d.ts");
+    },
   },
-  entries: [
-    'src/index'
-  ]
-})
+});
