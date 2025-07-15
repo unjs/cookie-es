@@ -142,4 +142,8 @@ export interface CookieParseOptions {
    * Custom function to filter parsing specific keys.
    */
   filter?(key: string): boolean;
+  /**
+   * Flag to allow to return multiple values when cookie is duplicated.
+   */
+  allowMultiple?: boolean;
 }
