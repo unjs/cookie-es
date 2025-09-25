@@ -49,4 +49,4 @@ import {
 
 [MIT](./LICENSE)
 
-Based on [jshttp/cookie](https://github.com/jshttp/cookie) (Roman Shtylman and hristopher Wilson) and [nfriedly/set-cookie-parser](https://github.com/nfriedly/set-cookie-parser) (Nathan Friedly).
+Based on [jshttp/cookie](https://github.com/jshttp/cookie) (Roman Shtylman and Douglas Christopher Wilson) and [nfriedly/set-cookie-parser](https://github.com/nfriedly/set-cookie-parser) (Nathan Friedly).
