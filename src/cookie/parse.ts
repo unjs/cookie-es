@@ -19,7 +19,7 @@ export function parse(
     throw new TypeError("argument str must be a string");
   }
 
-  const obj = {};
+  const obj = Object.create(null);
   const opt = options || {};
   const dec = opt.decode || decode;
 
