@@ -61,6 +61,27 @@ describe("cookie.parse(str)", () => {
       bar: "bar",
     });
   });
+
+  it("should return duplicated cookies values if `allowMultiple` is set", () => {
+    expect(
+      parse("foo=%1;bar=bar;foo=boo", { allowMultiple: true }),
+    ).toMatchObject({
+      foo: "%1,boo",
+      bar: "bar",
+    });
+    expect(
+      parse("foo=false;bar=bar;foo=true", { allowMultiple: true }),
+    ).toMatchObject({
+      foo: "false,true",
+      bar: "bar",
+    });
+    expect(
+      parse("foo=;bar=bar;foo=boo", { allowMultiple: true }),
+    ).toMatchObject({
+      foo: "boo",
+      bar: "bar",
+    });
+  });
 });
 
 describe("cookie.parse(str, options)", () => {

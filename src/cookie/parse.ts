@@ -19,9 +19,10 @@ export function parse(
     throw new TypeError("argument str must be a string");
   }
 
-  const obj = {};
+  const obj: Record<string, string> = {};
   const opt = options || {};
   const dec = opt.decode || decode;
+  const allowMultiple = opt.allowMultiple || false;
 
   let index = 0;
   while (index < str.length) {
@@ -48,16 +49,24 @@ export function parse(
       continue;
     }
 
-    // only assign once
-    if (undefined === obj[key as keyof typeof obj]) {
-      let val = str.slice(eqIdx + 1, endIdx).trim();
+    let val = str.slice(eqIdx + 1, endIdx).trim();
 
-      // quoted values
-      if (val.codePointAt(0) === 0x22) {
-        val = val.slice(1, -1);
+    // quoted values
+    if (val.codePointAt(0) === 0x22) {
+      val = val.slice(1, -1);
+    }
+
+    val = tryDecode(val, dec);
+
+    // handle multiple values for the same key
+    // TODO: enable by default in v2
+    if (allowMultiple) {
+      obj[key] =
+        obj[key] === undefined || obj[key] === "" ? val : `${obj[key]},${val}`;
+    } else {
+      if (obj[key] === undefined) {
+        obj[key] = val;
       }
-
-      (obj as any)[key] = tryDecode(val, dec);
     }
 
     index = endIdx + 1;
