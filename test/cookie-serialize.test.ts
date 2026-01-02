@@ -146,7 +146,7 @@ describe("serialize(name, value, options)", () => {
 
     it("should not set when null", () => {
       // @ts-expect-error
-      // eslint-disable-next-line unicorn/no-null
+
       expect(serialize("foo", "bar", { maxAge: null })).toBe("foo=bar");
     });
   });
