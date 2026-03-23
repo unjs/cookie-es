@@ -61,7 +61,11 @@ export function parseSetCookie(
         break;
       }
       default: {
-        if (partKey !== "__proto__" && partKey !== "constructor" && partKey !== "prototype") {
+        if (
+          partKey !== "__proto__" &&
+          partKey !== "constructor" &&
+          partKey !== "prototype"
+        ) {
           cookie[partKey] = partValue;
         }
       }

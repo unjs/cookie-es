@@ -1,12 +1,13 @@
 // Cookie
-export { parse } from "./cookie/parse";
-export { serialize } from "./cookie/serialize";
+export { parse, parseSetCookie } from "./cookie/parse.ts";
+export { serialize, stringifyCookie } from "./cookie/serialize.ts";
 export type {
   CookieParseOptions,
   CookieSerializeOptions,
-} from "./cookie/types";
+  CookieStringifyOptions,
+  Cookies,
+  SetCookie,
+} from "./cookie/types.ts";
 
 // Set-Cookie
-export { parseSetCookie } from "./set-cookie/parse";
-export { splitSetCookieString } from "./set-cookie/split";
-export type { SetCookieParseOptions, SetCookie } from "./set-cookie/types";
+export { splitSetCookieString } from "./set-cookie/split.ts";

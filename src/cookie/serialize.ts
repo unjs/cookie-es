@@ -1,101 +1,213 @@
 // Based on https://github.com/jshttp/cookie (MIT)
 // Copyright (c) 2012-2014 Roman Shtylman <shtylman@gmail.com>
 // Copyright (c) 2015 Douglas Christopher Wilson <doug@somethingdoug.com>
-// Last sync: 84a156749b673dbfbf43679829b15be09fbd8988
+// Last sync: v1.1.1 (e264dfa)
 
-import type { CookieSerializeOptions } from "./types";
-export type { CookieParseOptions, CookieSerializeOptions } from "./types";
+import type {
+  Cookies,
+  SetCookie,
+  CookieStringifyOptions,
+  CookieSerializeOptions,
+} from "./types.ts";
+
+export type {
+  CookieParseOptions,
+  CookieSerializeOptions,
+  CookieStringifyOptions,
+  Cookies,
+  SetCookie,
+} from "./types.ts";
 
 /**
- * RegExp to match field-content in RFC 7230 sec 3.2
+ * RegExp to match cookie-name in RFC 6265 sec 4.1.1
+ * This refers out to the obsoleted definition of token in RFC 2616 sec 2.2
+ * which has been replaced by the token definition in RFC 7230 appendix B.
  *
- * field-content = field-vchar [ 1*( SP / HTAB ) field-vchar ]
- * field-vchar   = VCHAR / obs-text
- * obs-text      = %x80-FF
+ * cookie-name       = token
+ * token             = 1*tchar
+ * tchar             = "!" / "#" / "$" / "%" / "&" / "'" /
+ *                     "*" / "+" / "-" / "." / "^" / "_" /
+ *                     "`" / "|" / "~" / DIGIT / ALPHA
+ *
+ * Note: Allowing more characters - https://github.com/jshttp/cookie/issues/191
+ * Allow same range as cookie value, except `=`, which delimits end of name.
  */
-// eslint-disable-next-line no-control-regex
-const fieldContentRegExp = /^[\u0009\u0020-\u007E\u0080-\u00FF]+$/;
+const cookieNameRegExp = /^[\u0021-\u003A\u003C\u003E-\u007E]+$/;
 
 /**
- * Serialize a cookie name-value pair into a `Set-Cookie` header string.
+ * RegExp to match cookie-value in RFC 6265 sec 4.1.1
  *
- * @param name the name for the cookie
- * @param value value to set the cookie to
- * @param [options] object containing serialization options
- * @throws {TypeError} when `maxAge` options is invalid
+ * cookie-value      = *cookie-octet / ( DQUOTE *cookie-octet DQUOTE )
+ * cookie-octet      = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
+ *                     ; US-ASCII characters excluding CTLs,
+ *                     ; whitespace DQUOTE, comma, semicolon,
+ *                     ; and backslash
+ *
+ * Allowing more characters: https://github.com/jshttp/cookie/issues/191
+ * Comma, backslash, and DQUOTE are not part of the parsing algorithm.
+ */
+const cookieValueRegExp = /^[\u0021-\u003A\u003C-\u007E]*$/;
+
+/**
+ * RegExp to match domain-value in RFC 6265 sec 4.1.1
+ *
+ * domain-value      = <subdomain>
+ *                     ; defined in [RFC1034], Section 3.5, as
+ *                     ; enhanced by [RFC1123], Section 2.1
+ * <subdomain>       = <label> | <subdomain> "." <label>
+ * <label>           = <let-dig> [ [ <ldh-str> ] <let-dig> ]
+ *                     Labels must be 63 characters or less.
+ *                     'let-dig' not 'letter' in the first char, per RFC1123
+ * <ldh-str>         = <let-dig-hyp> | <let-dig-hyp> <ldh-str>
+ * <let-dig-hyp>     = <let-dig> | "-"
+ * <let-dig>         = <letter> | <digit>
+ * <letter>          = any one of the 52 alphabetic characters A through Z in
+ *                     upper case and a through z in lower case
+ * <digit>           = any one of the ten digits 0 through 9
+ *
+ * Keep support for leading dot: https://github.com/jshttp/cookie/issues/173
+ *
+ * > (Note that a leading %x2E ("."), if present, is ignored even though that
+ * character is not permitted, but a trailing %x2E ("."), if present, will
+ * cause the user agent to ignore the attribute.)
+ */
+const domainValueRegExp =
+  /^([.]?[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)([.][a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)*$/i;
+
+/**
+ * RegExp to match path-value in RFC 6265 sec 4.1.1
+ *
+ * path-value        = <any CHAR except CTLs or ";">
+ * CHAR              = %x01-7F
+ *                     ; defined in RFC 5234 appendix B.1
+ */
+const pathValueRegExp = /^[\u0020-\u003A\u003D-\u007E]*$/;
+
+const __toString = Object.prototype.toString;
+
+/**
+ * Stringifies an object into an HTTP `Cookie` header.
+ */
+export function stringifyCookie(
+  cookie: Cookies,
+  options?: CookieStringifyOptions,
+): string {
+  const enc = options?.encode || encodeURIComponent;
+  const keys = Object.keys(cookie);
+  let str = "";
+
+  for (const [i, name] of keys.entries()) {
+    const val = cookie[name];
+    if (val === undefined) continue;
+
+    if (!cookieNameRegExp.test(name)) {
+      throw new TypeError(`cookie name is invalid: ${name}`);
+    }
+
+    const value = enc(val);
+
+    if (!cookieValueRegExp.test(value)) {
+      throw new TypeError(`cookie val is invalid: ${val}`);
+    }
+
+    if (i > 0) str += "; ";
+    str += name + "=" + value;
+  }
+
+  return str;
+}
+
+/**
+ * Serialize data into a cookie header.
+ *
+ * Serialize a name value pair into a cookie string suitable for
+ * http headers. An optional options object specifies cookie parameters.
+ *
+ * serialize('foo', 'bar', { httpOnly: true })
+ *   => "foo=bar; httpOnly"
  */
 export function serialize(
+  cookie: SetCookie,
+  options?: CookieStringifyOptions,
+): string;
+export function serialize(
   name: string,
-  value: string,
+  val: string,
   options?: CookieSerializeOptions,
+): string;
+export function serialize(
+  _name: string | SetCookie,
+  _val?: string | CookieStringifyOptions,
+  _opts?: CookieSerializeOptions,
 ): string {
-  const opt = options || {};
-  const enc = opt.encode || encodeURIComponent;
+  const cookie =
+    typeof _name === "object"
+      ? _name
+      : { ..._opts, name: _name, value: String(_val) };
+  const options = typeof _val === "object" ? _val : _opts;
+  const enc = options?.encode || encodeURIComponent;
 
-  if (typeof enc !== "function") {
-    throw new TypeError("option encode is invalid");
+  if (!cookieNameRegExp.test(cookie.name)) {
+    throw new TypeError(`argument name is invalid: ${cookie.name}`);
   }
 
-  if (!fieldContentRegExp.test(name)) {
-    throw new TypeError("argument name is invalid");
+  const value = cookie.value ? enc(cookie.value) : "";
+
+  if (!cookieValueRegExp.test(value)) {
+    throw new TypeError(`argument val is invalid: ${cookie.value}`);
   }
 
-  const encodedValue = enc(value);
+  let str = cookie.name + "=" + value;
 
-  if (encodedValue && !fieldContentRegExp.test(encodedValue)) {
-    throw new TypeError("argument val is invalid");
-  }
-
-  let str = name + "=" + encodedValue;
-
-  if (undefined !== opt.maxAge && opt.maxAge !== null) {
-    const maxAge = opt.maxAge - 0;
-
-    if (Number.isNaN(maxAge) || !Number.isFinite(maxAge)) {
-      throw new TypeError("option maxAge is invalid");
+  if (cookie.maxAge !== undefined) {
+    if (!Number.isInteger(cookie.maxAge)) {
+      throw new TypeError(`option maxAge is invalid: ${cookie.maxAge}`);
     }
 
-    str += "; Max-Age=" + Math.floor(maxAge);
+    str += "; Max-Age=" + cookie.maxAge;
   }
 
-  if (opt.domain) {
-    if (!fieldContentRegExp.test(opt.domain)) {
-      throw new TypeError("option domain is invalid");
+  if (cookie.domain) {
+    if (!domainValueRegExp.test(cookie.domain)) {
+      throw new TypeError(`option domain is invalid: ${cookie.domain}`);
     }
 
-    str += "; Domain=" + opt.domain;
+    str += "; Domain=" + cookie.domain;
   }
 
-  if (opt.path) {
-    if (!fieldContentRegExp.test(opt.path)) {
-      throw new TypeError("option path is invalid");
+  if (cookie.path) {
+    if (!pathValueRegExp.test(cookie.path)) {
+      throw new TypeError(`option path is invalid: ${cookie.path}`);
     }
 
-    str += "; Path=" + opt.path;
+    str += "; Path=" + cookie.path;
   }
 
-  if (opt.expires) {
-    if (!isDate(opt.expires) || Number.isNaN(opt.expires.valueOf())) {
-      throw new TypeError("option expires is invalid");
+  if (cookie.expires) {
+    if (!isDate(cookie.expires) || !Number.isFinite(cookie.expires.valueOf())) {
+      throw new TypeError(`option expires is invalid: ${cookie.expires}`);
     }
 
-    str += "; Expires=" + opt.expires.toUTCString();
+    str += "; Expires=" + cookie.expires.toUTCString();
   }
 
-  if (opt.httpOnly) {
+  if (cookie.httpOnly) {
     str += "; HttpOnly";
   }
 
-  if (opt.secure) {
+  if (cookie.secure) {
     str += "; Secure";
   }
 
-  if (opt.priority) {
-    const priority =
-      typeof opt.priority === "string"
-        ? opt.priority.toLowerCase()
-        : opt.priority;
+  if (cookie.partitioned) {
+    str += "; Partitioned";
+  }
 
+  if (cookie.priority) {
+    const priority =
+      typeof cookie.priority === "string"
+        ? cookie.priority.toLowerCase()
+        : undefined;
     switch (priority) {
       case "low": {
         str += "; Priority=Low";
@@ -110,19 +222,19 @@ export function serialize(
         break;
       }
       default: {
-        throw new TypeError("option priority is invalid");
+        throw new TypeError(`option priority is invalid: ${cookie.priority}`);
       }
     }
   }
 
-  if (opt.sameSite) {
+  if (cookie.sameSite) {
     const sameSite =
-      typeof opt.sameSite === "string"
-        ? opt.sameSite.toLowerCase()
-        : opt.sameSite;
-
+      typeof cookie.sameSite === "string"
+        ? cookie.sameSite.toLowerCase()
+        : cookie.sameSite;
     switch (sameSite) {
-      case true: {
+      case true:
+      case "strict": {
         str += "; SameSite=Strict";
         break;
       }
@@ -130,30 +242,24 @@ export function serialize(
         str += "; SameSite=Lax";
         break;
       }
-      case "strict": {
-        str += "; SameSite=Strict";
-        break;
-      }
       case "none": {
         str += "; SameSite=None";
         break;
       }
       default: {
-        throw new TypeError("option sameSite is invalid");
+        throw new TypeError(`option sameSite is invalid: ${cookie.sameSite}`);
       }
     }
-  }
-
-  if (opt.partitioned) {
-    str += "; Partitioned";
   }
 
   return str;
 }
 
-function isDate(val: unknown) {
-  return (
-    Object.prototype.toString.call(val) === "[object Date]" ||
-    val instanceof Date
-  );
+// --- Internal Utils ---
+
+/**
+ * Determine if value is a Date.
+ */
+function isDate(val: unknown): val is Date {
+  return __toString.call(val) === "[object Date]";
 }

@@ -1,20 +1,14 @@
 // Based on https://github.com/jshttp/cookie (MIT)
 // Copyright (c) 2012-2014 Roman Shtylman <shtylman@gmail.com>
 // Copyright (c) 2015 Douglas Christopher Wilson <doug@somethingdoug.com>
-// Last sync: 84a156749b673dbfbf43679829b15be09fbd8988
+// Last sync: e264dfa
 
 import { describe, it, expect } from "vitest";
 import { parse } from "../src";
 
 describe("cookie.parse(str)", () => {
-  it("should throw with no arguments", () => {
-    expect(() => parse(undefined as any)).throws(
-      /argument str must be a string/,
-    );
-  });
-
-  it("should throw when not a string", () => {
-    expect(() => parse(42 as any)).throws(/argument str must be a string/);
+  it("should return empty object for empty string", () => {
+    expect(parse("")).toMatchObject({});
   });
 
   it("should parse cookie string to object", () => {
@@ -67,7 +61,7 @@ describe("cookie.parse(str, options)", () => {
   describe('with "decode" option', () => {
     it("should specify alternative value decoder", () => {
       expect(
-        parse('foo="YmFy"', {
+        parse("foo=YmFy", {
           decode: (v) => {
             return atob(v);
           },

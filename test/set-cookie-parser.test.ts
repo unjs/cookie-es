@@ -99,16 +99,12 @@ describe("parseSetCookie", () => {
   });
 
   it("should ignore invalid sameSite values", () => {
-    expect(
-      parseSetCookie("foo=bar; SameSite=Invalid"),
-    ).toStrictEqual({
+    expect(parseSetCookie("foo=bar; SameSite=Invalid")).toStrictEqual({
       name: "foo",
       value: "bar",
     });
 
-    expect(
-      parseSetCookie("foo=bar; SameSite=Lax"),
-    ).toStrictEqual({
+    expect(parseSetCookie("foo=bar; SameSite=Lax")).toStrictEqual({
       name: "foo",
       value: "bar",
       sameSite: "lax",
@@ -116,26 +112,20 @@ describe("parseSetCookie", () => {
   });
 
   it("should parse priority attribute", () => {
-    expect(
-      parseSetCookie("foo=bar; Priority=High"),
-    ).toStrictEqual({
+    expect(parseSetCookie("foo=bar; Priority=High")).toStrictEqual({
       name: "foo",
       value: "bar",
       priority: "high",
     });
 
-    expect(
-      parseSetCookie("foo=bar; Priority=Invalid"),
-    ).toStrictEqual({
+    expect(parseSetCookie("foo=bar; Priority=Invalid")).toStrictEqual({
       name: "foo",
       value: "bar",
     });
   });
 
   it("should parse partitioned attribute", () => {
-    expect(
-      parseSetCookie("foo=bar; Partitioned"),
-    ).toStrictEqual({
+    expect(parseSetCookie("foo=bar; Partitioned")).toStrictEqual({
       name: "foo",
       value: "bar",
       partitioned: true,

@@ -1,7 +1,7 @@
 // Based on https://github.com/jshttp/cookie (MIT)
 // Copyright (c) 2012-2014 Roman Shtylman <shtylman@gmail.com>
 // Copyright (c) 2015 Douglas Christopher Wilson <doug@somethingdoug.com>
-// Last sync: 84a156749b673dbfbf43679829b15be09fbd8988
+// Last sync: e264dfa
 
 import { describe, it, expect } from "vitest";
 import { serialize } from "../src";
@@ -43,13 +43,6 @@ describe("serialize(name, value, options)", () => {
   });
 
   describe('with "encode" option', () => {
-    it("should throw on non-function value", () => {
-      // @ts-expect-error
-      expect(() => serialize("foo", "bar", { encode: 42 })).toThrow(
-        /option encode is invalid/,
-      );
-    });
-
     it("should specify alternative value encoder", () => {
       expect(
         serialize("foo", "bar", {
@@ -120,34 +113,17 @@ describe("serialize(name, value, options)", () => {
       ).toThrow(/option maxAge is invalid/);
     });
 
+    it("should throw when not integer", () => {
+      expect(() => serialize("foo", "bar", { maxAge: 3.14 })).toThrow(
+        /option maxAge is invalid/,
+      );
+    });
+
     it("should set max-age to value", () => {
       expect(serialize("foo", "bar", { maxAge: 1000 })).toBe(
         "foo=bar; Max-Age=1000",
       );
-      // @ts-expect-error
-      expect(serialize("foo", "bar", { maxAge: "1000" })).toBe(
-        "foo=bar; Max-Age=1000",
-      );
       expect(serialize("foo", "bar", { maxAge: 0 })).toBe("foo=bar; Max-Age=0");
-      // @ts-expect-error
-      expect(serialize("foo", "bar", { maxAge: "0" })).toBe(
-        "foo=bar; Max-Age=0",
-      );
-    });
-
-    it("should set max-age to integer value", () => {
-      expect(serialize("foo", "bar", { maxAge: 3.14 })).toBe(
-        "foo=bar; Max-Age=3",
-      );
-      expect(serialize("foo", "bar", { maxAge: 3.99 })).toBe(
-        "foo=bar; Max-Age=3",
-      );
-    });
-
-    it("should not set when null", () => {
-      // @ts-expect-error
-      // eslint-disable-next-line unicorn/no-null
-      expect(serialize("foo", "bar", { maxAge: null })).toBe("foo=bar");
     });
   });
 
