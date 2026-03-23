@@ -252,14 +252,14 @@ describe("serialize(setCookie)", () => {
   });
 
   it("should serialize SetCookie with options", () => {
-    expect(
-      serialize({ name: "foo", value: "bar", httpOnly: true, secure: true }),
-    ).toBe("foo=bar; HttpOnly; Secure");
+    expect(serialize({ name: "foo", value: "bar", httpOnly: true, secure: true })).toBe(
+      "foo=bar; HttpOnly; Secure",
+    );
   });
 
   it("should serialize SetCookie with encode option", () => {
-    expect(
-      serialize({ name: "foo", value: "bar baz" }, { encode: (v) => btoa(v) }),
-    ).toBe("foo=YmFyIGJheg==");
+    expect(serialize({ name: "foo", value: "bar baz" }, { encode: (v) => btoa(v) })).toBe(
+      "foo=YmFyIGJheg==",
+    );
   });
 });

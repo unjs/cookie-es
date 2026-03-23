@@ -56,27 +56,19 @@ describe("cookie.parse(str)", () => {
     });
   });
   it("should return array for duplicate cookies when `allowMultiple` is set", () => {
-    expect(
-      parse("foo=%1;bar=bar;foo=boo", { allowMultiple: true }),
-    ).toEqual({
+    expect(parse("foo=%1;bar=bar;foo=boo", { allowMultiple: true })).toEqual({
       foo: ["%1", "boo"],
       bar: "bar",
     });
-    expect(
-      parse("foo=false;bar=bar;foo=true", { allowMultiple: true }),
-    ).toEqual({
+    expect(parse("foo=false;bar=bar;foo=true", { allowMultiple: true })).toEqual({
       foo: ["false", "true"],
       bar: "bar",
     });
-    expect(
-      parse("foo=;bar=bar;foo=boo", { allowMultiple: true }),
-    ).toEqual({
+    expect(parse("foo=;bar=bar;foo=boo", { allowMultiple: true })).toEqual({
       foo: ["", "boo"],
       bar: "bar",
     });
-    expect(
-      parse("foo=a;bar=bar;foo=b;foo=c", { allowMultiple: true }),
-    ).toEqual({
+    expect(parse("foo=a;bar=bar;foo=b;foo=c", { allowMultiple: true })).toEqual({
       foo: ["a", "b", "c"],
       bar: "bar",
     });

@@ -22,7 +22,10 @@ const NullObject = /* @__PURE__ */ (() => {
  * Parse the given cookie header string into an object
  * The object has the various cookies as keys(names) => values
  */
-export function parse(str: string, options: CookieParseOptions & { allowMultiple: true }): MultiCookies;
+export function parse(
+  str: string,
+  options: CookieParseOptions & { allowMultiple: true },
+): MultiCookies;
 export function parse(str: string, options?: CookieParseOptions): Cookies;
 export function parse(str: string, options?: CookieParseOptions): Cookies | MultiCookies {
   const obj: MultiCookies = new NullObject();
