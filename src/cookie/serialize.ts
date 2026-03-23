@@ -9,6 +9,7 @@ import type {
   CookieStringifyOptions,
   CookieSerializeOptions,
 } from "./types.ts";
+import { COOKIE_MAX_AGE_LIMIT } from "../_utils.ts";
 
 export type {
   CookieParseOptions,
@@ -19,7 +20,7 @@ export type {
 } from "./types.ts";
 
 /**
- * RegExp to match cookie-name in RFC 6265 sec 4.1.1
+ * RegExp to match cookie-name in RFC 6265bis sec 4.1.1
  * This refers out to the obsoleted definition of token in RFC 2616 sec 2.2
  * which has been replaced by the token definition in RFC 7230 appendix B.
  *
@@ -35,7 +36,7 @@ export type {
 const cookieNameRegExp = /^[\u0021-\u003A\u003C\u003E-\u007E]+$/;
 
 /**
- * RegExp to match cookie-value in RFC 6265 sec 4.1.1
+ * RegExp to match cookie-value in RFC 6265bis sec 4.1.1
  *
  * cookie-value      = *cookie-octet / ( DQUOTE *cookie-octet DQUOTE )
  * cookie-octet      = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
@@ -49,7 +50,7 @@ const cookieNameRegExp = /^[\u0021-\u003A\u003C\u003E-\u007E]+$/;
 const cookieValueRegExp = /^[\u0021-\u003A\u003C-\u007E]*$/;
 
 /**
- * RegExp to match domain-value in RFC 6265 sec 4.1.1
+ * RegExp to match domain-value in RFC 6265bis sec 4.1.1
  *
  * domain-value      = <subdomain>
  *                     ; defined in [RFC1034], Section 3.5, as
@@ -75,13 +76,13 @@ const domainValueRegExp =
   /^([.]?[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)([.][a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)*$/i;
 
 /**
- * RegExp to match path-value in RFC 6265 sec 4.1.1
+ * RegExp to match path-value in RFC 6265bis sec 4.1.1
  *
  * path-value        = <any CHAR except CTLs or ";">
  * CHAR              = %x01-7F
  *                     ; defined in RFC 5234 appendix B.1
  */
-const pathValueRegExp = /^[\u0020-\u003A\u003D-\u007E]*$/;
+const pathValueRegExp = /^[\u0020-\u003A\u003C-\u007E]*$/;
 
 const __toString = Object.prototype.toString;
 
@@ -144,6 +145,44 @@ export function serialize(
     throw new TypeError(`argument val is invalid: ${cookie.value}`);
   }
 
+  // RFC 6265bis: validate attributes requiring Secure
+  if (!cookie.secure) {
+    // CHIPS: Partitioned requires Secure
+    if (cookie.partitioned) {
+      throw new TypeError(`Partitioned cookies must have the Secure attribute`);
+    }
+    // RFC 6265bis sec 4.1.2.7: SameSite=None requires Secure
+    if (cookie.sameSite && String(cookie.sameSite).toLowerCase() === "none") {
+      throw new TypeError(`SameSite=None cookies must have the Secure attribute`);
+    }
+    // RFC 6265bis sec 4.1.3: __Secure- prefix requires Secure
+    if (
+      cookie.name.length > 9 &&
+      cookie.name.charCodeAt(0) === 95 /* _ */ &&
+      cookie.name.charCodeAt(1) === 95 /* _ */
+    ) {
+      const nameLower = cookie.name.toLowerCase();
+      if (nameLower.startsWith("__secure-") || nameLower.startsWith("__host-")) {
+        throw new TypeError(`${cookie.name} cookies must have the Secure attribute`);
+      }
+    }
+  }
+
+  // RFC 6265bis sec 4.1.3.2: __Host- prefix validation
+  if (
+    cookie.name.length > 7 &&
+    cookie.name.charCodeAt(0) === 95 /* _ */ &&
+    cookie.name.charCodeAt(1) === 95 /* _ */ &&
+    cookie.name.toLowerCase().startsWith("__host-")
+  ) {
+    if (cookie.path !== "/") {
+      throw new TypeError(`__Host- cookies must have Path=/`);
+    }
+    if (cookie.domain) {
+      throw new TypeError(`__Host- cookies must not have a Domain attribute`);
+    }
+  }
+
   let str = cookie.name + "=" + value;
 
   if (cookie.maxAge !== undefined) {
@@ -151,7 +190,8 @@ export function serialize(
       throw new TypeError(`option maxAge is invalid: ${cookie.maxAge}`);
     }
 
-    str += "; Max-Age=" + cookie.maxAge;
+    // RFC 6265bis: clamp negative to 0, cap to 400-day limit
+    str += "; Max-Age=" + Math.max(0, Math.min(cookie.maxAge, COOKIE_MAX_AGE_LIMIT));
   }
 
   if (cookie.domain) {

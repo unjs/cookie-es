@@ -1,4 +1,9 @@
 /**
+ * RFC 6265bis cookie-age-limit: 400 days in seconds.
+ */
+export const COOKIE_MAX_AGE_LIMIT = 400 * 24 * 60 * 60; // 34560000
+
+/**
  * Find the `;` character between `min` and `len` in str.
  */
 export function endIndex(str: string, min: number, len: number) {

@@ -51,6 +51,10 @@ test/
 └── split-cookies-string.test.ts # splitSetCookieString() tests
 ```
 
+## References
+
+- [RFC 6265bis (draft-ietf-httpbis-rfc6265bis-19)](.agents/rfc6265bis.txt) — Cookies: HTTP State Management Mechanism (obsoletes RFC 6265)
+
 ## Key Implementation Details
 
 - `parse()` uses a custom zero-allocation `NullObject` (prototype-less) for output to avoid prototype pollution.

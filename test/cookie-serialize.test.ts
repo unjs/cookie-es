@@ -113,6 +113,19 @@ describe("serialize(name, value, options)", () => {
       expect(serialize("foo", "bar", { maxAge: 1000 })).toBe("foo=bar; Max-Age=1000");
       expect(serialize("foo", "bar", { maxAge: 0 })).toBe("foo=bar; Max-Age=0");
     });
+
+    it("should clamp negative Max-Age to 0", () => {
+      expect(serialize("foo", "bar", { maxAge: -1 })).toBe("foo=bar; Max-Age=0");
+      expect(serialize("foo", "bar", { maxAge: -1000 })).toBe("foo=bar; Max-Age=0");
+    });
+
+    it("should cap Max-Age to 400 days (34560000 seconds)", () => {
+      expect(serialize("foo", "bar", { maxAge: 99_999_999 })).toBe("foo=bar; Max-Age=34560000");
+    });
+
+    it("should not modify Max-Age within 400 days", () => {
+      expect(serialize("foo", "bar", { maxAge: 1000 })).toBe("foo=bar; Max-Age=1000");
+    });
   });
 
   describe('with "path" option', () => {
@@ -122,6 +135,10 @@ describe("serialize(name, value, options)", () => {
 
     it("should throw for invalid value", () => {
       expect(() => serialize("foo", "bar", { path: "/\n" })).toThrow(/option path is invalid/);
+    });
+
+    it("should accept '<' in path value (valid av-octet per RFC 6265bis)", () => {
+      expect(serialize("foo", "bar", { path: "/foo<bar" })).toBe("foo=bar; Path=/foo<bar");
     });
   });
 
@@ -176,8 +193,18 @@ describe("serialize(name, value, options)", () => {
 
     it("should set sameSite none", () => {
       // @ts-expect-error
-      expect(serialize("foo", "bar", { sameSite: "None" })).toBe("foo=bar; SameSite=None");
-      expect(serialize("foo", "bar", { sameSite: "none" })).toBe("foo=bar; SameSite=None");
+      expect(serialize("foo", "bar", { sameSite: "None", secure: true })).toBe(
+        "foo=bar; Secure; SameSite=None",
+      );
+      expect(serialize("foo", "bar", { sameSite: "none", secure: true })).toBe(
+        "foo=bar; Secure; SameSite=None",
+      );
+    });
+
+    it("should throw sameSite none without secure", () => {
+      expect(() => serialize("foo", "bar", { sameSite: "none" })).toThrow(
+        /SameSite=None cookies must have the Secure attribute/,
+      );
     });
 
     it("should set sameSite strict when true", () => {
@@ -201,11 +228,61 @@ describe("serialize(name, value, options)", () => {
 
   describe('with "partitioned" option', () => {
     it("should include partitioned flag when true", () => {
-      expect(serialize("foo", "bar", { partitioned: true })).toBe("foo=bar; Partitioned");
+      expect(serialize("foo", "bar", { partitioned: true, secure: true })).toBe(
+        "foo=bar; Secure; Partitioned",
+      );
+    });
+
+    it("should throw partitioned without secure", () => {
+      expect(() => serialize("foo", "bar", { partitioned: true })).toThrow(
+        /Partitioned cookies must have the Secure attribute/,
+      );
     });
 
     it("should not include partitioned flag when false", () => {
       expect(serialize("foo", "bar", { partitioned: false })).toBe("foo=bar");
+    });
+  });
+
+  describe("__Secure- prefix validation (RFC 6265bis)", () => {
+    it("should throw when serializing __Secure- cookie without Secure flag", () => {
+      expect(() => serialize("__Secure-SID", "abc123")).toThrow();
+    });
+
+    it("should allow __Secure- cookie with Secure flag", () => {
+      expect(() => serialize("__Secure-SID", "abc123", { secure: true })).not.toThrow();
+    });
+
+    it("should validate __Secure- prefix case-insensitively", () => {
+      expect(() => serialize("__secure-SID", "abc123")).toThrow();
+    });
+  });
+
+  describe("__Host- prefix validation (RFC 6265bis)", () => {
+    it("should throw when serializing __Host- cookie without Secure flag", () => {
+      expect(() => serialize("__Host-SID", "abc123", { path: "/" })).toThrow();
+    });
+
+    it("should throw when serializing __Host- cookie without Path=/", () => {
+      expect(() => serialize("__Host-SID", "abc123", { secure: true })).toThrow();
+    });
+
+    it("should throw when serializing __Host- cookie with Domain", () => {
+      expect(() =>
+        serialize("__Host-SID", "abc123", {
+          secure: true,
+          path: "/",
+          domain: "example.com",
+        }),
+      ).toThrow();
+    });
+
+    it("should allow valid __Host- cookie", () => {
+      expect(() => serialize("__Host-SID", "abc123", { secure: true, path: "/" })).not.toThrow();
+    });
+
+    it("should validate __Host- prefix case-insensitively", () => {
+      expect(() => serialize("__host-SID", "abc123")).toThrow();
     });
   });
 });

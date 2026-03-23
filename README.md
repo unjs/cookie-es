@@ -10,7 +10,7 @@
 
 <!-- /automd -->
 
-ESM-ready [`Cookie`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cookie) and [`Set-Cookie`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie) parser and serializer based on [cookie](https://github.com/jshttp/cookie) and [set-cookie-parser](https://github.com/nfriedly/set-cookie-parser) with built-in TypeScript types.
+ESM-ready [`Cookie`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cookie) and [`Set-Cookie`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie) parser and serializer based on [cookie](https://github.com/jshttp/cookie) and [set-cookie-parser](https://github.com/nfriedly/set-cookie-parser) with built-in TypeScript types. Compliant with [RFC 6265bis](https://httpwg.org/http-extensions/draft-ietf-httpbis-rfc6265bis.html).
 
 ## Install
 
@@ -85,7 +85,7 @@ parseSetCookie(
 // }
 ```
 
-Supports `decode` option (custom function or `false` to skip decoding). Returns `undefined` for cookies with forbidden names (prototype pollution protection).
+Supports `decode` option (custom function or `false` to skip decoding). Returns `undefined` for cookies with forbidden names (prototype pollution protection) or when both name and value are empty ([RFC 6265bis](https://httpwg.org/http-extensions/draft-ietf-httpbis-rfc6265bis.html) sec 5.7).
 
 ### `serialize(name, value, options?)`
 

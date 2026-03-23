@@ -26,7 +26,7 @@ export function parse(str: string, options?: CookieParseOptions): Cookies;
 export function parse(str: string, options?: CookieParseOptions): Cookies | MultiCookies {
   const obj: MultiCookies = new NullObject();
   const len = str.length;
-  // RFC 6265 sec 4.1.1, RFC 2616 2.2 defines a cookie name consists of one char minimum, plus '='.
+  // RFC 6265bis sec 4.1.1, RFC 2616 2.2 defines a cookie name consists of one char minimum, plus '='.
   if (len < 2) return obj;
 
   const dec = options?.decode || decode;

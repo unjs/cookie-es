@@ -24,7 +24,7 @@ describe("parseSetCookie", () => {
       path: "/",
       expires: new Date("Tue, 01 Jul 2025 10:01:11 GMT"),
       maxAge: 1000,
-      domain: ".example.com",
+      domain: "example.com",
       secure: true,
       httpOnly: true,
     });
@@ -40,7 +40,7 @@ describe("parseSetCookie", () => {
       value: "bar=bar&foo=foo&John=Doe&Doe=John",
       path: "/",
       maxAge: 1000,
-      domain: ".example.com",
+      domain: "example.com",
       secure: true,
       httpOnly: true,
     });
@@ -91,14 +91,15 @@ describe("parseSetCookie", () => {
       name: "foo",
       value: "bar",
       path: "/foo",
-      domain: ".example.com",
+      domain: "example.com",
     });
   });
 
-  it("should ignore invalid sameSite values", () => {
+  it("should default unknown sameSite values to lax (RFC 6265bis)", () => {
     expect(parseSetCookie("foo=bar; SameSite=Invalid")).toStrictEqual({
       name: "foo",
       value: "bar",
+      sameSite: "lax",
     });
 
     expect(parseSetCookie("foo=bar; SameSite=Lax")).toStrictEqual({
@@ -193,6 +194,54 @@ describe("parseSetCookie", () => {
     });
   });
 
+  it("should reject Set-Cookie when name+value exceeds 4096 octets (RFC 6265bis)", () => {
+    const longValue = "x".repeat(4097);
+    expect(parseSetCookie(`foo=${longValue}`)).toBeUndefined();
+  });
+
+  it("should accept Set-Cookie when name+value is exactly 4096 octets (RFC 6265bis)", () => {
+    const value = "x".repeat(4093); // "foo" (3) + value (4093) = 4096
+    const result = parseSetCookie(`foo=${value}`);
+    expect(result).toBeDefined();
+    expect(result?.name).toBe("foo");
+  });
+
+  it("should ignore domain attribute exceeding 1024 octets (RFC 6265bis)", () => {
+    const longDomain = "x".repeat(1025) + ".com";
+    const result = parseSetCookie(`foo=bar; Domain=${longDomain}`);
+    expect(result).toBeDefined();
+    expect(result?.domain).toBeUndefined();
+  });
+
+  it("should ignore path attribute exceeding 1024 octets (RFC 6265bis)", () => {
+    const longPath = "/" + "x".repeat(1025);
+    const result = parseSetCookie(`foo=bar; Path=${longPath}`);
+    expect(result).toBeDefined();
+    expect(result?.path).toBeUndefined();
+  });
+
+  it("should lowercase domain value (RFC 6265bis)", () => {
+    const result = parseSetCookie("foo=bar; Domain=Example.COM");
+    expect(result?.domain).toBe("example.com");
+  });
+
+  it("should strip leading dot AND lowercase domain (RFC 6265bis)", () => {
+    const result = parseSetCookie("foo=bar; Domain=.Example.COM");
+    expect(result?.domain).toBe("example.com");
+  });
+
+  it("should cap parsed Max-Age to 400 days (RFC 6265bis)", () => {
+    const result = parseSetCookie("foo=bar; Max-Age=99999999");
+    expect(result?.maxAge).toBe(34_560_000);
+  });
+
+  it("should cap Expires to 400 days from now (RFC 6265bis)", () => {
+    const farFuture = new Date(Date.now() + 500 * 24 * 60 * 60 * 1000);
+    const result = parseSetCookie(`foo=bar; Expires=${farFuture.toUTCString()}`);
+    const maxDate = new Date(Date.now() + 400 * 24 * 60 * 60 * 1000);
+    expect(result?.expires!.getTime()).toBeLessThanOrEqual(maxDate.getTime());
+  });
+
   it("should return undefined for forbidden cookie names", () => {
     expect(parseSetCookie("__proto__=evil")).toBeUndefined();
     expect(parseSetCookie("constructor=evil")).toBeUndefined();
@@ -225,6 +274,21 @@ describe("parseSetCookie", () => {
     expect(parseSetCookie("foo=hello%20world", { decode: false })).toStrictEqual({
       name: "foo",
       value: "hello%20world",
+    });
+  });
+
+  it("should return undefined when both name and value are empty", () => {
+    expect(parseSetCookie("")).toBeUndefined();
+    expect(parseSetCookie(";")).toBeUndefined();
+    expect(parseSetCookie("=")).toBeUndefined();
+    expect(parseSetCookie("   ")).toBeUndefined();
+    expect(parseSetCookie(" = ")).toBeUndefined();
+  });
+
+  it("should parse cookie with empty name but non-empty value", () => {
+    expect(parseSetCookie("=bar")).toStrictEqual({
+      name: "",
+      value: "bar",
     });
   });
 });
