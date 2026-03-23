@@ -29,7 +29,7 @@
     "eslint": "^9.38.0",
     "eslint-config-unjs": "^0.5.0",
     "prettier": "^3.6.2",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.2",
     "unbuild": "^3.6.1",
     "vitest": "^3.2.4"
   },
