@@ -48,8 +48,7 @@ describe("parseSetCookie", () => {
   });
 
   it("should parse a cookie with percent-encoding in the data", () => {
-    const cookieStr =
-      "foo=asdf%3Basdf%3Dtrue%3Basdf%3Dasdf%3Basdf%3Dtrue%40asdf";
+    const cookieStr = "foo=asdf%3Basdf%3Dtrue%3Basdf%3Dasdf%3Basdf%3Dtrue%40asdf";
 
     expect(parseSetCookie(cookieStr)).toStrictEqual({
       name: "foo",
@@ -71,8 +70,7 @@ describe("parseSetCookie", () => {
       ),
     ).toStrictEqual({
       name: "foo",
-      value:
-        "R%F3r%EB%80%8DP%FF%3B%2C%23%9A%0CU%8E%A2C8%D7%3C%3C%B0%DF%17%60%F7Y%DB%16%8BQ%D6%1A",
+      value: "R%F3r%EB%80%8DP%FF%3B%2C%23%9A%0CU%8E%A2C8%D7%3C%3C%B0%DF%17%60%F7Y%DB%16%8BQ%D6%1A",
     });
   });
 
@@ -88,9 +86,7 @@ describe("parseSetCookie", () => {
   });
 
   it("should trim attribute values", () => {
-    expect(
-      parseSetCookie("foo=bar; Path= /foo ; Domain= .example.com "),
-    ).toStrictEqual({
+    expect(parseSetCookie("foo=bar; Path= /foo ; Domain= .example.com ")).toStrictEqual({
       name: "foo",
       value: "bar",
       path: "/foo",

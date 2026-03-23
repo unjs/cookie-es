@@ -88,10 +88,7 @@ const __toString = Object.prototype.toString;
 /**
  * Stringifies an object into an HTTP `Cookie` header.
  */
-export function stringifyCookie(
-  cookie: Cookies,
-  options?: CookieStringifyOptions,
-): string {
+export function stringifyCookie(cookie: Cookies, options?: CookieStringifyOptions): string {
   const enc = options?.encode || encodeURIComponent;
   const keys = Object.keys(cookie);
   let str = "";
@@ -126,24 +123,14 @@ export function stringifyCookie(
  * serialize('foo', 'bar', { httpOnly: true })
  *   => "foo=bar; httpOnly"
  */
-export function serialize(
-  cookie: SetCookie,
-  options?: CookieStringifyOptions,
-): string;
-export function serialize(
-  name: string,
-  val: string,
-  options?: CookieSerializeOptions,
-): string;
+export function serialize(cookie: SetCookie, options?: CookieStringifyOptions): string;
+export function serialize(name: string, val: string, options?: CookieSerializeOptions): string;
 export function serialize(
   _name: string | SetCookie,
   _val?: string | CookieStringifyOptions,
   _opts?: CookieSerializeOptions,
 ): string {
-  const cookie =
-    typeof _name === "object"
-      ? _name
-      : { ..._opts, name: _name, value: String(_val) };
+  const cookie = typeof _name === "object" ? _name : { ..._opts, name: _name, value: String(_val) };
   const options = typeof _val === "object" ? _val : _opts;
   const enc = options?.encode || encodeURIComponent;
 
@@ -205,9 +192,7 @@ export function serialize(
 
   if (cookie.priority) {
     const priority =
-      typeof cookie.priority === "string"
-        ? cookie.priority.toLowerCase()
-        : undefined;
+      typeof cookie.priority === "string" ? cookie.priority.toLowerCase() : undefined;
     switch (priority) {
       case "low": {
         str += "; Priority=Low";
@@ -229,9 +214,7 @@ export function serialize(
 
   if (cookie.sameSite) {
     const sameSite =
-      typeof cookie.sameSite === "string"
-        ? cookie.sameSite.toLowerCase()
-        : cookie.sameSite;
+      typeof cookie.sameSite === "string" ? cookie.sameSite.toLowerCase() : cookie.sameSite;
     switch (sameSite) {
       case true:
       case "strict": {

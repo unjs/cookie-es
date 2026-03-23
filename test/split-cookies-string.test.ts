@@ -139,22 +139,14 @@ describe("splitSetCookieString", function () {
   });
 
   it("should parse first with expires at end, second with expires at end", function () {
-    const actual = splitSetCookieString(
-      firstWithExpiresAtEndSecondWithExpiresAtEnd,
-    );
+    const actual = splitSetCookieString(firstWithExpiresAtEndSecondWithExpiresAtEnd);
     const expected = [cookieWithExpiresAtEnd, cookieWithExpiresAtEnd];
     expect(actual).toStrictEqual(expected);
   });
 
   it("should parse first with expires, second with expires at end, third with expires", function () {
-    const actual = splitSetCookieString(
-      firstWithExpiresSecondWithExpiresAtEndThirdWithExpires,
-    );
-    const expected = [
-      cookieWithExpires,
-      cookieWithExpiresAtEnd,
-      cookieWithExpires,
-    ];
+    const actual = splitSetCookieString(firstWithExpiresSecondWithExpiresAtEndThirdWithExpires);
+    const expected = [cookieWithExpires, cookieWithExpiresAtEnd, cookieWithExpires];
     expect(actual).toStrictEqual(expected);
   });
 
@@ -162,11 +154,7 @@ describe("splitSetCookieString", function () {
     const actual = splitSetCookieString(
       firstWithExpiresSecondWithExpiresAtEndThirdWithExpiresAtEnd,
     );
-    const expected = [
-      cookieWithExpires,
-      cookieWithExpiresAtEnd,
-      cookieWithExpiresAtEnd,
-    ];
+    const expected = [cookieWithExpires, cookieWithExpiresAtEnd, cookieWithExpiresAtEnd];
     expect(actual).toStrictEqual(expected);
   });
 
@@ -178,11 +166,7 @@ describe("splitSetCookieString", function () {
 
   it("should parse three with expires at end", function () {
     const actual = splitSetCookieString(threeWithExpiresAtEnd);
-    const expected = [
-      cookieWithExpiresAtEnd,
-      cookieWithExpiresAtEnd,
-      cookieWithExpiresAtEnd,
-    ];
+    const expected = [cookieWithExpiresAtEnd, cookieWithExpiresAtEnd, cookieWithExpiresAtEnd];
     expect(actual).toStrictEqual(expected);
   });
 

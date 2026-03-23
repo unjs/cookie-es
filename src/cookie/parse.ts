@@ -64,10 +64,7 @@ export function parse(str: string, options?: CookieParseOptions): Cookies {
 /**
  * Deserialize a `Set-Cookie` header into an object.
  */
-export function parseSetCookie(
-  str: string,
-  options?: CookieParseOptions,
-): SetCookie {
+export function parseSetCookie(str: string, options?: CookieParseOptions): SetCookie {
   const dec = options?.decode || decode;
   const len = str.length;
   const _endIdx = endIndex(str, 0, len);
@@ -84,10 +81,7 @@ export function parseSetCookie(
   while (index < len) {
     const endIdx = endIndex(str, index, len);
     const eqIdx = eqIndex(str, index, endIdx);
-    const attr =
-      eqIdx === -1
-        ? valueSlice(str, index, endIdx)
-        : valueSlice(str, index, eqIdx);
+    const attr = eqIdx === -1 ? valueSlice(str, index, endIdx) : valueSlice(str, index, eqIdx);
     const val = eqIdx === -1 ? undefined : valueSlice(str, eqIdx + 1, endIdx);
 
     switch (attr.toLowerCase()) {
@@ -124,11 +118,7 @@ export function parseSetCookie(
       case "priority": {
         if (!val) break;
         const priority = val.toLowerCase();
-        if (
-          priority === "low" ||
-          priority === "medium" ||
-          priority === "high"
-        ) {
+        if (priority === "low" || priority === "medium" || priority === "high") {
           setCookie.priority = priority;
         }
         break;
@@ -136,11 +126,7 @@ export function parseSetCookie(
       case "samesite": {
         if (!val) break;
         const sameSite = val.toLowerCase();
-        if (
-          sameSite === "lax" ||
-          sameSite === "strict" ||
-          sameSite === "none"
-        ) {
+        if (sameSite === "lax" || sameSite === "strict" || sameSite === "none") {
           setCookie.sameSite = sameSite;
         }
         break;

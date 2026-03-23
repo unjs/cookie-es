@@ -26,23 +26,13 @@ Import:
 **ESM** (Node.js, Bun, Deno)
 
 ```js
-import {
-  parse,
-  serialize,
-  parseSetCookie,
-  splitSetCookieString,
-} from "cookie-es";
+import { parse, serialize, parseSetCookie, splitSetCookieString } from "cookie-es";
 ```
 
 **CDN** (Deno, Bun and Browsers)
 
 ```js
-import {
-  parse,
-  serialize,
-  parseSetCookie,
-  splitSetCookieString,
-} from "https://esm.sh/cookie-es";
+import { parse, serialize, parseSetCookie, splitSetCookieString } from "https://esm.sh/cookie-es";
 ```
 
 ## License

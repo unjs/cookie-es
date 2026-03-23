@@ -21,9 +21,7 @@ describe("serialize(name, value)", () => {
 
   it("should throw for invalid name", () => {
     expect(() => serialize("foo\n", "bar")).toThrow(/argument name is invalid/);
-    expect(() => serialize("foo\u280A", "bar")).toThrow(
-      /argument name is invalid/,
-    );
+    expect(() => serialize("foo\u280A", "bar")).toThrow(/argument name is invalid/);
   });
 });
 
@@ -36,9 +34,9 @@ describe("serialize(name, value, options)", () => {
     });
 
     it("should throw for invalid value", () => {
-      expect(() =>
-        serialize("foo", "bar", { domain: "example.com\n" }),
-      ).toThrow(/option domain is invalid/);
+      expect(() => serialize("foo", "bar", { domain: "example.com\n" })).toThrow(
+        /option domain is invalid/,
+      );
     });
   });
 
@@ -67,15 +65,13 @@ describe("serialize(name, value, options)", () => {
   describe('with "expires" option', () => {
     it("should throw on non-Date value", () => {
       // @ts-expect-error
-      expect(() => serialize("foo", "bar", { expires: 42 })).toThrow(
-        /option expires is invalid/,
-      );
+      expect(() => serialize("foo", "bar", { expires: 42 })).toThrow(/option expires is invalid/);
     });
 
     it("should throw on invalid date", () => {
-      expect(() =>
-        serialize("foo", "bar", { expires: new Date(Number.NaN) }),
-      ).toThrow(/option expires is invalid/);
+      expect(() => serialize("foo", "bar", { expires: new Date(Number.NaN) })).toThrow(
+        /option expires is invalid/,
+      );
     });
 
     it("should set expires to given date", () => {
@@ -89,9 +85,7 @@ describe("serialize(name, value, options)", () => {
 
   describe('with "httpOnly" option', () => {
     it("should include httpOnly flag when true", () => {
-      expect(serialize("foo", "bar", { httpOnly: true })).toBe(
-        "foo=bar; HttpOnly",
-      );
+      expect(serialize("foo", "bar", { httpOnly: true })).toBe("foo=bar; HttpOnly");
     });
 
     it("should not include httpOnly flag when false", () => {
@@ -102,42 +96,32 @@ describe("serialize(name, value, options)", () => {
   describe('with "maxAge" option', () => {
     it("should throw when not a number", () => {
       // @ts-expect-error
-      expect(() => serialize("foo", "bar", { maxAge: "buzz" })).toThrow(
-        /option maxAge is invalid/,
-      );
+      expect(() => serialize("foo", "bar", { maxAge: "buzz" })).toThrow(/option maxAge is invalid/);
     });
 
     it("should throw when Infinity", () => {
-      expect(() =>
-        serialize("foo", "bar", { maxAge: Number.POSITIVE_INFINITY }),
-      ).toThrow(/option maxAge is invalid/);
-    });
-
-    it("should throw when not integer", () => {
-      expect(() => serialize("foo", "bar", { maxAge: 3.14 })).toThrow(
+      expect(() => serialize("foo", "bar", { maxAge: Number.POSITIVE_INFINITY })).toThrow(
         /option maxAge is invalid/,
       );
     });
 
+    it("should throw when not integer", () => {
+      expect(() => serialize("foo", "bar", { maxAge: 3.14 })).toThrow(/option maxAge is invalid/);
+    });
+
     it("should set max-age to value", () => {
-      expect(serialize("foo", "bar", { maxAge: 1000 })).toBe(
-        "foo=bar; Max-Age=1000",
-      );
+      expect(serialize("foo", "bar", { maxAge: 1000 })).toBe("foo=bar; Max-Age=1000");
       expect(serialize("foo", "bar", { maxAge: 0 })).toBe("foo=bar; Max-Age=0");
     });
   });
 
   describe('with "path" option', () => {
     it("should serialize path", () => {
-      expect(serialize("foo", "bar", { path: "/foo" })).toBe(
-        "foo=bar; Path=/foo",
-      );
+      expect(serialize("foo", "bar", { path: "/foo" })).toBe("foo=bar; Path=/foo");
     });
 
     it("should throw for invalid value", () => {
-      expect(() => serialize("foo", "bar", { path: "/\n" })).toThrow(
-        /option path is invalid/,
-      );
+      expect(() => serialize("foo", "bar", { path: "/\n" })).toThrow(/option path is invalid/);
     });
   });
 
@@ -151,81 +135,53 @@ describe("serialize(name, value, options)", () => {
 
     it("should throw on non-string", () => {
       // @ts-expect-error
-      expect(() => serialize("foo", "bar", { priority: 42 })).toThrow(
-        /option priority is invalid/,
-      );
+      expect(() => serialize("foo", "bar", { priority: 42 })).toThrow(/option priority is invalid/);
     });
 
     it("should set priority low", () => {
-      expect(serialize("foo", "bar", { priority: "low" })).toBe(
-        "foo=bar; Priority=Low",
-      );
+      expect(serialize("foo", "bar", { priority: "low" })).toBe("foo=bar; Priority=Low");
       // @ts-expect-error
-      expect(serialize("foo", "bar", { priority: "loW" })).toBe(
-        "foo=bar; Priority=Low",
-      );
+      expect(serialize("foo", "bar", { priority: "loW" })).toBe("foo=bar; Priority=Low");
     });
 
     it("should set priority medium", () => {
       // @ts-expect-error
-      expect(serialize("foo", "bar", { priority: "Medium" })).toBe(
-        "foo=bar; Priority=Medium",
-      );
-      expect(serialize("foo", "bar", { priority: "medium" })).toBe(
-        "foo=bar; Priority=Medium",
-      );
+      expect(serialize("foo", "bar", { priority: "Medium" })).toBe("foo=bar; Priority=Medium");
+      expect(serialize("foo", "bar", { priority: "medium" })).toBe("foo=bar; Priority=Medium");
     });
 
     it("should set priority high", () => {
       // @ts-expect-error
-      expect(serialize("foo", "bar", { priority: "higH" })).toBe(
-        "foo=bar; Priority=High",
-      );
+      expect(serialize("foo", "bar", { priority: "higH" })).toBe("foo=bar; Priority=High");
     });
   });
 
   describe('with "sameSite" option', () => {
     it("should throw on invalid sameSite", () => {
       // @ts-expect-error
-      expect(() => serialize("foo", "bar", { sameSite: 42 })).toThrow(
-        /option sameSite is invalid/,
-      );
+      expect(() => serialize("foo", "bar", { sameSite: 42 })).toThrow(/option sameSite is invalid/);
     });
 
     it("should set sameSite strict", () => {
       // @ts-expect-error
-      expect(serialize("foo", "bar", { sameSite: "Strict" })).toBe(
-        "foo=bar; SameSite=Strict",
-      );
-      expect(serialize("foo", "bar", { sameSite: "strict" })).toBe(
-        "foo=bar; SameSite=Strict",
-      );
+      expect(serialize("foo", "bar", { sameSite: "Strict" })).toBe("foo=bar; SameSite=Strict");
+      expect(serialize("foo", "bar", { sameSite: "strict" })).toBe("foo=bar; SameSite=Strict");
     });
 
     it("should set sameSite lax", () => {
-      expect(serialize("foo", "bar", { sameSite: "lax" })).toBe(
-        "foo=bar; SameSite=Lax",
-      );
+      expect(serialize("foo", "bar", { sameSite: "lax" })).toBe("foo=bar; SameSite=Lax");
       // @ts-expect-error
-      expect(serialize("foo", "bar", { sameSite: "Lax" })).toBe(
-        "foo=bar; SameSite=Lax",
-      );
+      expect(serialize("foo", "bar", { sameSite: "Lax" })).toBe("foo=bar; SameSite=Lax");
     });
 
     it("should set sameSite none", () => {
       // @ts-expect-error
-      expect(serialize("foo", "bar", { sameSite: "None" })).toBe(
-        "foo=bar; SameSite=None",
-      );
-      expect(serialize("foo", "bar", { sameSite: "none" })).toBe(
-        "foo=bar; SameSite=None",
-      );
+      expect(serialize("foo", "bar", { sameSite: "None" })).toBe("foo=bar; SameSite=None");
+      expect(serialize("foo", "bar", { sameSite: "none" })).toBe("foo=bar; SameSite=None");
     });
 
     it("should set sameSite strict when true", () => {
-      expect(serialize("foo", "bar", { sameSite: true })).toBe(
-        "foo=bar; SameSite=Strict",
-      );
+      expect(serialize("foo", "bar", { sameSite: true })).toBe("foo=bar; SameSite=Strict");
     });
 
     it("should not set sameSite when false", () => {
@@ -245,9 +201,7 @@ describe("serialize(name, value, options)", () => {
 
   describe('with "partitioned" option', () => {
     it("should include partitioned flag when true", () => {
-      expect(serialize("foo", "bar", { partitioned: true })).toBe(
-        "foo=bar; Partitioned",
-      );
+      expect(serialize("foo", "bar", { partitioned: true })).toBe("foo=bar; Partitioned");
     });
 
     it("should not include partitioned flag when false", () => {

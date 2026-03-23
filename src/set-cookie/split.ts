@@ -8,9 +8,7 @@
  *
  * See https://tools.ietf.org/html/rfc2616#section-4.2
  */
-export function splitSetCookieString(
-  cookiesString: string | string[],
-): string[] {
+export function splitSetCookieString(cookiesString: string | string[]): string[] {
   if (Array.isArray(cookiesString)) {
     return cookiesString.flatMap((c) => splitSetCookieString(c));
   }

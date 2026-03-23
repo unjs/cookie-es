@@ -7,10 +7,7 @@ import type { SetCookie, SetCookieParseOptions } from "./types";
 /**
  * Parse a [Set-Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie) header string into an object.
  */
-export function parseSetCookie(
-  setCookieValue: string,
-  options?: SetCookieParseOptions,
-): SetCookie {
+export function parseSetCookie(setCookieValue: string, options?: SetCookieParseOptions): SetCookie {
   const parts = (setCookieValue || "")
     .split(";")
     .filter((str) => typeof str === "string" && !!str.trim());
@@ -22,10 +19,7 @@ export function parseSetCookie(
 
   let value = parsed.value;
   try {
-    value =
-      options?.decode === false
-        ? value
-        : (options?.decode || decodeURIComponent)(value);
+    value = options?.decode === false ? value : (options?.decode || decodeURIComponent)(value);
   } catch {
     // Fallback to undecoded value
   }
@@ -61,11 +55,7 @@ export function parseSetCookie(
         break;
       }
       default: {
-        if (
-          partKey !== "__proto__" &&
-          partKey !== "constructor" &&
-          partKey !== "prototype"
-        ) {
+        if (partKey !== "__proto__" && partKey !== "constructor" && partKey !== "prototype") {
           cookie[partKey] = partValue;
         }
       }

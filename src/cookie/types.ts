@@ -128,5 +128,4 @@ export interface SetCookie {
 /**
  * Backward compatibility serialize options.
  */
-export type CookieSerializeOptions = CookieStringifyOptions &
-  Omit<SetCookie, "name" | "value">;
+export type CookieSerializeOptions = CookieStringifyOptions & Omit<SetCookie, "name" | "value">;
