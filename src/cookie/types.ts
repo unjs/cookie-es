@@ -23,12 +23,23 @@ export interface CookieParseOptions {
    * Custom function to filter parsing specific keys.
    */
   filter?(key: string): boolean;
+
+  /**
+   * When enabled, duplicate cookie names will return an array of values
+   * instead of only the first value.
+   */
+  allowMultiple?: boolean;
 }
 
 /**
  * Cookies object.
  */
 export type Cookies = Record<string, string | undefined>;
+
+/**
+ * Cookies object when `allowMultiple` is enabled.
+ */
+export type MultiCookies = Record<string, string | string[] | undefined>;
 
 /**
  * Stringify options.
