@@ -6,15 +6,14 @@
   "sideEffects": false,
   "type": "module",
   "exports": {
-    "types": "./dist/index.d.mts",
-    "default": "./dist/index.mjs"
+    ".": "./dist/index.mjs"
   },
   "types": "./dist/index.d.mts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "unbuild",
+    "build": "obuild",
     "dev": "vitest --coverage",
     "lint": "eslint --cache . && prettier -c src test",
     "lint:fix": "automd && eslint --cache . --fix && prettier -c src test -w",
@@ -28,9 +27,9 @@
     "changelogen": "^0.6.2",
     "eslint": "^9.38.0",
     "eslint-config-unjs": "^0.5.0",
+    "obuild": "^0.4.32",
     "prettier": "^3.6.2",
     "typescript": "^5.9.3",
-    "unbuild": "^3.6.1",
     "vitest": "^3.2.4"
   },
   "packageManager": "pnpm@10.20.0"
