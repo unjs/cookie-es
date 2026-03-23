@@ -35,6 +35,24 @@ import { parse, serialize, parseSetCookie, splitSetCookieString } from "cookie-e
 import { parse, serialize, parseSetCookie, splitSetCookieString } from "https://esm.sh/cookie-es";
 ```
 
+## Parsing Options
+
+### `allowMultiple`
+
+By default, when a cookie name appears more than once, only the first value is kept. Set `allowMultiple: true` to collect all values into an array:
+
+```js
+import { parse } from "cookie-es";
+
+// Default: first value wins
+parse("foo=a;bar=b;foo=c");
+// => { foo: "a", bar: "b" }
+
+// With allowMultiple: duplicates return arrays
+parse("foo=a;bar=b;foo=c", { allowMultiple: true });
+// => { foo: ["a", "c"], bar: "b" }
+```
+
 ## License
 
 [MIT](./LICENSE)
