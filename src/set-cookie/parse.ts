@@ -90,7 +90,9 @@ export function parseSetCookie(
         case "domain": {
           // RFC 6265bis sec 5.6.3: strip leading dot and lowercase
           if (val) {
-            setCookie.domain = (val.charCodeAt(0) === 0x2e /* . */ ? val.slice(1) : val).toLowerCase();
+            setCookie.domain = (
+              val.charCodeAt(0) === 0x2e /* . */ ? val.slice(1) : val
+            ).toLowerCase();
           }
           break;
         }
