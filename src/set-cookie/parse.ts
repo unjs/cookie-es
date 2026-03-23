@@ -28,10 +28,7 @@ export function parseSetCookie(
     return undefined;
   }
 
-  let value =
-    eqIdx === -1
-      ? valueSlice(str, 0, _endIdx)
-      : valueSlice(str, eqIdx + 1, _endIdx);
+  let value = eqIdx === -1 ? valueSlice(str, 0, _endIdx) : valueSlice(str, eqIdx + 1, _endIdx);
   if (options?.decode !== false) {
     value = _decode(value, options?.decode);
   }
@@ -42,12 +39,8 @@ export function parseSetCookie(
   while (index < len) {
     const endIdx = endIndex(str, index, len);
     const eqIdx = eqIndex(str, index, endIdx);
-    const attr =
-      eqIdx === -1
-        ? valueSlice(str, index, endIdx)
-        : valueSlice(str, index, eqIdx);
-    const val =
-      eqIdx === -1 ? undefined : valueSlice(str, eqIdx + 1, endIdx);
+    const attr = eqIdx === -1 ? valueSlice(str, index, endIdx) : valueSlice(str, index, eqIdx);
+    const val = eqIdx === -1 ? undefined : valueSlice(str, eqIdx + 1, endIdx);
     const attrLower = attr.toLowerCase();
 
     if (_isForbiddenKey(attrLower)) {
@@ -89,11 +82,7 @@ export function parseSetCookie(
       case "priority": {
         if (!val) break;
         const priority = val.toLowerCase();
-        if (
-          priority === "low" ||
-          priority === "medium" ||
-          priority === "high"
-        ) {
+        if (priority === "low" || priority === "medium" || priority === "high") {
           setCookie.priority = priority;
         }
         break;
@@ -101,11 +90,7 @@ export function parseSetCookie(
       case "samesite": {
         if (!val) break;
         const sameSite = val.toLowerCase();
-        if (
-          sameSite === "lax" ||
-          sameSite === "strict" ||
-          sameSite === "none"
-        ) {
+        if (sameSite === "lax" || sameSite === "strict" || sameSite === "none") {
           setCookie.sameSite = sameSite;
         }
         break;
@@ -129,14 +114,10 @@ function _isForbiddenKey(key: string): boolean {
   return !key || key in {};
 }
 
-function _decode(
-  value: string,
-  decode?: ((value: string) => string) | undefined,
-): string {
+function _decode(value: string, decode?: ((value: string) => string) | undefined): string {
   try {
     return (decode || decodeURIComponent)(value);
   } catch {
     return value;
   }
 }
-
