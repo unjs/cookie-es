@@ -16,7 +16,7 @@
     "build": "obuild",
     "dev": "vitest --coverage",
     "lint": "oxlint . && oxfmt --check src test",
-    "fmt": "automd && oxlint . --fix && oxfmt --check src test",
+    "fmt": "automd && oxlint . --fix && oxfmt src test",
     "release": "pnpm test && pnpm build && changelogen --release --push && npm publish",
     "test": "pnpm lint && vitest run --coverage"
   },

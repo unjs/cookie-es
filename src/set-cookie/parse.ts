@@ -7,7 +7,10 @@ import type { SetCookie, SetCookieParseOptions } from "./types.ts";
 /**
  * Parse a [Set-Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie) header string into an object.
  */
-export function parseSetCookie(setCookieValue: string, options?: SetCookieParseOptions): SetCookie | undefined {
+export function parseSetCookie(
+  setCookieValue: string,
+  options?: SetCookieParseOptions,
+): SetCookie | undefined {
   const parts = (setCookieValue || "")
     .split(";")
     .filter((str) => typeof str === "string" && !!str.trim());
