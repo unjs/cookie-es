@@ -181,4 +181,16 @@ describe("splitSetCookieString", function () {
     const expected = [jsonCookieWithParams];
     expect(actual).toStrictEqual(expected);
   });
+
+  it("should handle cookie string ending at separator boundary", function () {
+    const actual = splitSetCookieString("a=1, b=2");
+    expect(actual).toStrictEqual(["a=1", "b=2"]);
+  });
+
+  it("should return empty array for non-string input", function () {
+    // @ts-expect-error testing invalid input
+    expect(splitSetCookieString(123)).toStrictEqual([]);
+    // @ts-expect-error testing invalid input
+    expect(splitSetCookieString(undefined)).toStrictEqual([]);
+  });
 });

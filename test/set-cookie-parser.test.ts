@@ -127,4 +127,46 @@ describe("parseSetCookie", () => {
       partitioned: true,
     });
   });
+
+  it("should ignore max-age without value", () => {
+    expect(parseSetCookie("foo=bar; Max-Age")).toStrictEqual({
+      name: "foo",
+      value: "bar",
+    });
+  });
+
+  it("should ignore max-age with invalid value", () => {
+    expect(parseSetCookie("foo=bar; Max-Age=abc")).toStrictEqual({
+      name: "foo",
+      value: "bar",
+    });
+  });
+
+  it("should ignore expires with invalid date", () => {
+    expect(parseSetCookie("foo=bar; Expires=not-a-date")).toStrictEqual({
+      name: "foo",
+      value: "bar",
+    });
+  });
+
+  it("should ignore expires without value", () => {
+    expect(parseSetCookie("foo=bar; Expires")).toStrictEqual({
+      name: "foo",
+      value: "bar",
+    });
+  });
+
+  it("should ignore priority without value", () => {
+    expect(parseSetCookie("foo=bar; Priority")).toStrictEqual({
+      name: "foo",
+      value: "bar",
+    });
+  });
+
+  it("should ignore sameSite without value", () => {
+    expect(parseSetCookie("foo=bar; SameSite")).toStrictEqual({
+      name: "foo",
+      value: "bar",
+    });
+  });
 });

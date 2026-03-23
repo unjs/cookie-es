@@ -4,7 +4,7 @@
 // Last sync: e264dfa
 
 import { describe, it, expect } from "vitest";
-import { serialize } from "../src";
+import { serialize, stringifyCookie } from "../src";
 
 describe("serialize(name, value)", () => {
   it("should serialize name and value", () => {
@@ -207,5 +207,59 @@ describe("serialize(name, value, options)", () => {
     it("should not include partitioned flag when false", () => {
       expect(serialize("foo", "bar", { partitioned: false })).toBe("foo=bar");
     });
+  });
+});
+
+describe("stringifyCookie(cookies)", () => {
+  it("should stringify a single cookie", () => {
+    expect(stringifyCookie({ foo: "bar" })).toBe("foo=bar");
+  });
+
+  it("should stringify multiple cookies", () => {
+    expect(stringifyCookie({ foo: "bar", baz: "qux" })).toBe("foo=bar; baz=qux");
+  });
+
+  it("should URL-encode values", () => {
+    expect(stringifyCookie({ foo: "bar baz" })).toBe("foo=bar%20baz");
+  });
+
+  it("should skip undefined values", () => {
+    expect(stringifyCookie({ foo: "bar", baz: undefined as unknown as string })).toBe("foo=bar");
+  });
+
+  it("should return empty string for empty object", () => {
+    expect(stringifyCookie({})).toBe("");
+  });
+
+  it("should throw for invalid cookie name", () => {
+    expect(() => stringifyCookie({ "foo\n": "bar" })).toThrow(/cookie name is invalid/);
+  });
+
+  it("should throw for invalid cookie value", () => {
+    expect(() => stringifyCookie({ foo: "bar" }, { encode: () => "\n" })).toThrow(
+      /cookie val is invalid/,
+    );
+  });
+
+  it("should use custom encode function", () => {
+    expect(stringifyCookie({ foo: "bar" }, { encode: (v) => btoa(v) })).toBe("foo=YmFy");
+  });
+});
+
+describe("serialize(setCookie)", () => {
+  it("should serialize from a SetCookie object", () => {
+    expect(serialize({ name: "foo", value: "bar" })).toBe("foo=bar");
+  });
+
+  it("should serialize SetCookie with options", () => {
+    expect(
+      serialize({ name: "foo", value: "bar", httpOnly: true, secure: true }),
+    ).toBe("foo=bar; HttpOnly; Secure");
+  });
+
+  it("should serialize SetCookie with encode option", () => {
+    expect(
+      serialize({ name: "foo", value: "bar baz" }, { encode: (v) => btoa(v) }),
+    ).toBe("foo=YmFyIGJheg==");
   });
 });
