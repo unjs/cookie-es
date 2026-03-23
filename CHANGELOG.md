@@ -1,5 +1,55 @@
 # Changelog
 
+## v3.0.0
+
+[compare changes](https://github.com/unjs/cookie-es/compare/v2.0.0...v3.0.0)
+
+### 🚀 Enhancements
+
+- ⚠️  Sync with jshttp/cookie v1.1.1 ([9ba2b8d](https://github.com/unjs/cookie-es/commit/9ba2b8d))
+- **parse:** Add `allowMultiple` option ([#55](https://github.com/unjs/cookie-es/pull/55))
+- **set-cookie:** Sync with set-cookie-parser v3.1.0 ([414058b](https://github.com/unjs/cookie-es/commit/414058b))
+- ⚠️  RFC 6265bis compliance ([d03f215](https://github.com/unjs/cookie-es/commit/d03f215))
+- Export `parseCookie` and `serializeCookie` aliases ([f49c157](https://github.com/unjs/cookie-es/commit/f49c157))
+
+### 🩹 Fixes
+
+- **set-cookie:** ⚠️  Prevent prototype pollution and sanitize parsed attributes ([e69cc32](https://github.com/unjs/cookie-es/commit/e69cc32))
+
+### 💅 Refactors
+
+- Merge `parseSetCookie` implementations ([a81865d](https://github.com/unjs/cookie-es/commit/a81865d))
+
+### 📦 Build
+
+- Migrate to obuild ([cc51b43](https://github.com/unjs/cookie-es/commit/cc51b43))
+
+### 🏡 Chore
+
+- Fix doug wilson attr in readme ([#79](https://github.com/unjs/cookie-es/pull/79))
+- Use oxfmt and oxlint ([64b5aa9](https://github.com/unjs/cookie-es/commit/64b5aa9))
+- Update docs ([f55cf20](https://github.com/unjs/cookie-es/commit/f55cf20))
+- Fix lint script ([2e69452](https://github.com/unjs/cookie-es/commit/2e69452))
+- Add agents.md ([93e0644](https://github.com/unjs/cookie-es/commit/93e0644))
+- Apply automated updates ([88d1c3d](https://github.com/unjs/cookie-es/commit/88d1c3d))
+
+### ✅ Tests
+
+- Increase coverage ([fcc2815](https://github.com/unjs/cookie-es/commit/fcc2815))
+- Increase coverage ([99745f9](https://github.com/unjs/cookie-es/commit/99745f9))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Sync with jshttp/cookie v1.1.1 ([9ba2b8d](https://github.com/unjs/cookie-es/commit/9ba2b8d))
+- ⚠️  RFC 6265bis compliance ([d03f215](https://github.com/unjs/cookie-es/commit/d03f215))
+- **set-cookie:** ⚠️  Prevent prototype pollution and sanitize parsed attributes ([e69cc32](https://github.com/unjs/cookie-es/commit/e69cc32))
+
+### ❤️ Contributors
+
+- Pooya Parsa ([@pi0](https://github.com/pi0))
+- João Carmona ([@jpsc](https://github.com/jpsc))
+- Jon Church ([@jonchurch](https://github.com/jonchurch))
+
 ## v2.0.0
 
 [compare changes](https://github.com/unjs/cookie-es/compare/v1.2.2...v2.0.0)
