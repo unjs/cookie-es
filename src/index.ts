@@ -1,6 +1,6 @@
 // Cookie
-export { parse } from "./cookie/parse.ts";
-export { serialize, stringifyCookie } from "./cookie/serialize.ts";
+export { parse, parse as parseCookie } from "./cookie/parse.ts";
+export { serialize, serialize as serializeCookie, stringifyCookie } from "./cookie/serialize.ts";
 export type {
   CookieParseOptions,
   CookieSerializeOptions,

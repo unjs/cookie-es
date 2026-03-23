@@ -25,9 +25,9 @@ npx nypm install cookie-es
 
 ```js
 import {
-  parse,
+  parseCookie,
   parseSetCookie,
-  serialize,
+  serializeCookie,
   stringifyCookie,
   splitSetCookieString,
 } from "cookie-es";
@@ -37,9 +37,9 @@ import {
 
 ```js
 import {
-  parse,
+  parseCookie,
   parseSetCookie,
-  serialize,
+  serializeCookie,
   stringifyCookie,
   splitSetCookieString,
 } from "https://esm.sh/cookie-es";
@@ -47,19 +47,19 @@ import {
 
 ## API
 
-### `parse(str, options?)`
+### `parseCookie(str, options?)`
 
 Parse a `Cookie` header string into an object. First occurrence wins for duplicate names.
 
 ```js
-parse("foo=bar; equation=E%3Dmc%5E2");
+parseCookie("foo=bar; equation=E%3Dmc%5E2");
 // { foo: "bar", equation: "E=mc^2" }
 
 // Custom decoder
-parse("foo=bar", { decode: (v) => v });
+parseCookie("foo=bar", { decode: (v) => v });
 
 // Only parse specific keys
-parse("a=1; b=2; c=3", { filter: (key) => key !== "b" });
+parseCookie("a=1; b=2; c=3", { filter: (key) => key !== "b" });
 // { a: "1", c: "3" }
 ```
 
@@ -87,16 +87,16 @@ parseSetCookie(
 
 Supports `decode` option (custom function or `false` to skip decoding). Returns `undefined` for cookies with forbidden names (prototype pollution protection) or when both name and value are empty ([RFC 6265bis](https://httpwg.org/http-extensions/draft-ietf-httpbis-rfc6265bis.html) sec 5.7).
 
-### `serialize(name, value, options?)`
+### `serializeCookie(name, value, options?)`
 
 Serialize a cookie name-value pair into a `Set-Cookie` header string.
 
 ```js
-serialize("foo", "bar", { httpOnly: true, secure: true, maxAge: 3600 });
+serializeCookie("foo", "bar", { httpOnly: true, secure: true, maxAge: 3600 });
 // "foo=bar; Max-Age=3600; HttpOnly; Secure"
 
 // Also accepts a cookie object
-serialize({
+serializeCookie({
   name: "foo",
   value: "bar",
   domain: "example.com",
@@ -107,6 +107,9 @@ serialize({
 ```
 
 Supported attributes: `maxAge`, `expires`, `domain`, `path`, `httpOnly`, `secure`, `sameSite`, `priority`, `partitioned`. Use `encode` option for custom value encoding (default: `encodeURIComponent`).
+
+> [!NOTE]
+> `parse` and `serialize` are available as shorter aliases for `parseCookie` and `serializeCookie`.
 
 ### `stringifyCookie(cookies, options?)`
 
@@ -139,14 +142,14 @@ splitSetCookieString(["a=1, b=2", "c=3"]);
 By default, when a cookie name appears more than once, only the first value is kept. Set `allowMultiple: true` to collect all values into an array:
 
 ```js
-import { parse } from "cookie-es";
+import { parseCookie } from "cookie-es";
 
 // Default: first value wins
-parse("foo=a;bar=b;foo=c");
+parseCookie("foo=a;bar=b;foo=c");
 // => { foo: "a", bar: "b" }
 
 // With allowMultiple: duplicates return arrays
-parse("foo=a;bar=b;foo=c", { allowMultiple: true });
+parseCookie("foo=a;bar=b;foo=c", { allowMultiple: true });
 // => { foo: ["a", "c"], bar: "b" }
 ```
 
