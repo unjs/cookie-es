@@ -26,6 +26,9 @@ importers:
       eslint-config-unjs:
         specifier: ^0.6.2
         version: 0.6.2(eslint@10.1.0(jiti@2.6.1))(typescript@6.0.2)
+      magic-string:
+        specifier: ^0.30.21
+        version: 0.30.21
       mitata:
         specifier: ^1.0.34
         version: 1.0.34
@@ -38,6 +41,9 @@ importers:
       oxlint:
         specifier: ^1.56.0
         version: 1.56.0
+      rolldown:
+        specifier: 1.0.0-rc.11
+        version: 1.0.0-rc.11
       typescript:
         specifier: ^6.0.2
         version: 6.0.2
