@@ -1,6 +1,7 @@
-// Based on https://github.com/nfriedly/set-cookie-parser (MIT)
-// Copyright (c) 2015 Nathan Friedly <nathan@nfriedly.com> (http://nfriedly.com/)
-// Last sync: v2.6.0 830debeeeec2ee21a36256bdef66485879dd18cd
+// Based on https://github.com/jshttp/cookie (MIT)
+// Copyright (c) 2012-2014 Roman Shtylman <shtylman@gmail.com>
+// Copyright (c) 2015 Douglas Christopher Wilson <doug@somethingdoug.com>
+// Last sync: e264dfa
 
 import { describe, it, expect } from "vitest";
 import { parseSetCookie } from "../src";
@@ -55,7 +56,8 @@ describe("parseSetCookie", () => {
       value: "asdf;asdf=true;asdf=asdf;asdf=true@asdf",
     });
 
-    expect(parseSetCookie(cookieStr, { decode: false })).toStrictEqual({
+    // Use identity decode to get raw value
+    expect(parseSetCookie(cookieStr, { decode: (v) => v })).toStrictEqual({
       name: "foo",
       value: "asdf%3Basdf%3Dtrue%3Basdf%3Dasdf%3Basdf%3Dtrue%40asdf",
     });
@@ -80,8 +82,63 @@ describe("parseSetCookie", () => {
     expect(parseSetCookie("foo;SameSite=None;Secure")).toStrictEqual({
       name: "",
       value: "foo",
-      sameSite: "None",
+      sameSite: "none",
       secure: true,
+    });
+  });
+
+  it("should trim attribute values", () => {
+    expect(
+      parseSetCookie("foo=bar; Path= /foo ; Domain= .example.com "),
+    ).toStrictEqual({
+      name: "foo",
+      value: "bar",
+      path: "/foo",
+      domain: ".example.com",
+    });
+  });
+
+  it("should ignore invalid sameSite values", () => {
+    expect(
+      parseSetCookie("foo=bar; SameSite=Invalid"),
+    ).toStrictEqual({
+      name: "foo",
+      value: "bar",
+    });
+
+    expect(
+      parseSetCookie("foo=bar; SameSite=Lax"),
+    ).toStrictEqual({
+      name: "foo",
+      value: "bar",
+      sameSite: "lax",
+    });
+  });
+
+  it("should parse priority attribute", () => {
+    expect(
+      parseSetCookie("foo=bar; Priority=High"),
+    ).toStrictEqual({
+      name: "foo",
+      value: "bar",
+      priority: "high",
+    });
+
+    expect(
+      parseSetCookie("foo=bar; Priority=Invalid"),
+    ).toStrictEqual({
+      name: "foo",
+      value: "bar",
+    });
+  });
+
+  it("should parse partitioned attribute", () => {
+    expect(
+      parseSetCookie("foo=bar; Partitioned"),
+    ).toStrictEqual({
+      name: "foo",
+      value: "bar",
+      partitioned: true,
     });
   });
 });

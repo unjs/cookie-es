@@ -38,7 +38,7 @@ export function parseSetCookie(
   for (const part of parts) {
     const sides = part.split("=");
     const partKey = (sides.shift() || "").trimStart().toLowerCase();
-    const partValue = sides.join("=");
+    const partValue = sides.join("=").trim();
     switch (partKey) {
       case "expires": {
         cookie.expires = new Date(partValue);
@@ -57,11 +57,13 @@ export function parseSetCookie(
         break;
       }
       case "samesite": {
-        cookie.sameSite = partValue as SetCookie["sameSite"];
+        cookie.sameSite = _parseSameSite(partValue);
         break;
       }
       default: {
-        cookie[partKey] = partValue;
+        if (partKey !== "__proto__" && partKey !== "constructor" && partKey !== "prototype") {
+          cookie[partKey] = partValue;
+        }
       }
     }
   }
@@ -85,4 +87,14 @@ function _parseNameValuePair(nameValuePairStr: string) {
   }
 
   return { name: name, value: value };
+}
+
+const _sameSiteValues = new Set(["strict", "lax", "none"]);
+
+function _parseSameSite(value: string): SetCookie["sameSite"] {
+  const lower = value.toLowerCase();
+  if (_sameSiteValues.has(lower)) {
+    return value as "strict" | "lax" | "none";
+  }
+  return undefined;
 }
