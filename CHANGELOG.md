@@ -1,5 +1,17 @@
 # Changelog
 
+## v3.0.1
+
+[compare changes](https://github.com/unjs/cookie-es/compare/v3.0.0...v3.0.1)
+
+### 📦 Build
+
+- Strip commands from mjs ([1185b1c](https://github.com/unjs/cookie-es/commit/1185b1c))
+
+### ❤️ Contributors
+
+- Pooya Parsa ([@pi0](https://github.com/pi0))
+
 ## v3.0.0
 
 [compare changes](https://github.com/unjs/cookie-es/compare/v2.0.0...v3.0.0)
