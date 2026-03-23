@@ -1,13 +1,13 @@
 // Based on https://github.com/nfriedly/set-cookie-parser (MIT)
 // Copyright (c) 2015 Nathan Friedly <nathan@nfriedly.com> (http://nfriedly.com/)
-// Last sync: v2.6.0 830debeeeec2ee21a36256bdef66485879dd18cd
+// Last sync: v3.1.0
 
-import type { SetCookie, SetCookieParseOptions } from "./types";
+import type { SetCookie, SetCookieParseOptions } from "./types.ts";
 
 /**
  * Parse a [Set-Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie) header string into an object.
  */
-export function parseSetCookie(setCookieValue: string, options?: SetCookieParseOptions): SetCookie {
+export function parseSetCookie(setCookieValue: string, options?: SetCookieParseOptions): SetCookie | undefined {
   const parts = (setCookieValue || "")
     .split(";")
     .filter((str) => typeof str === "string" && !!str.trim());
@@ -16,6 +16,10 @@ export function parseSetCookie(setCookieValue: string, options?: SetCookieParseO
   const parsed = _parseNameValuePair(nameValuePairStr);
 
   const name = parsed.name;
+
+  if (_isForbiddenKey(name)) {
+    return undefined;
+  }
 
   let value = parsed.value;
   try {
@@ -33,13 +37,22 @@ export function parseSetCookie(setCookieValue: string, options?: SetCookieParseO
     const sides = part.split("=");
     const partKey = (sides.shift() || "").trimStart().toLowerCase();
     const partValue = sides.join("=").trim();
+    if (_isForbiddenKey(partKey)) {
+      continue;
+    }
     switch (partKey) {
       case "expires": {
-        cookie.expires = new Date(partValue);
+        const date = new Date(partValue);
+        if (!Number.isNaN(date.getTime())) {
+          cookie.expires = date;
+        }
         break;
       }
       case "max-age": {
-        cookie.maxAge = Number.parseInt(partValue, 10);
+        const n = Number.parseInt(partValue, 10);
+        if (!Number.isNaN(n)) {
+          cookie.maxAge = n;
+        }
         break;
       }
       case "secure": {
@@ -54,8 +67,16 @@ export function parseSetCookie(setCookieValue: string, options?: SetCookieParseO
         cookie.sameSite = _parseSameSite(partValue);
         break;
       }
+      case "partitioned": {
+        cookie.partitioned = true;
+        break;
+      }
+      case "priority": {
+        cookie.priority = _parsePriority(partValue);
+        break;
+      }
       default: {
-        if (partKey !== "__proto__" && partKey !== "constructor" && partKey !== "prototype") {
+        if (partKey) {
           cookie[partKey] = partValue;
         }
       }
@@ -83,12 +104,26 @@ function _parseNameValuePair(nameValuePairStr: string) {
   return { name: name, value: value };
 }
 
+function _isForbiddenKey(key: string): boolean {
+  return !key || key in {};
+}
+
 const _sameSiteValues = new Set(["strict", "lax", "none"]);
 
 function _parseSameSite(value: string): SetCookie["sameSite"] {
   const lower = value.toLowerCase();
   if (_sameSiteValues.has(lower)) {
-    return value as "strict" | "lax" | "none";
+    return lower as "strict" | "lax" | "none";
+  }
+  return undefined;
+}
+
+const _priorityValues = new Set(["low", "medium", "high"]);
+
+function _parsePriority(value: string): SetCookie["priority"] {
+  const lower = value.toLowerCase();
+  if (_priorityValues.has(lower)) {
+    return lower as "low" | "medium" | "high";
   }
   return undefined;
 }

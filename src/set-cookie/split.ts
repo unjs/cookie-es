@@ -1,6 +1,6 @@
 // Based on https://github.com/nfriedly/set-cookie-parser (MIT)
 // Copyright (c) 2015 Nathan Friedly <nathan@nfriedly.com> (http://nfriedly.com/)
-// Last sync: v2.6.0 830debeeeec2ee21a36256bdef66485879dd18cd
+// Last sync: v3.1.0
 
 /**
  * Set-Cookie header field-values are sometimes comma joined in one string. This splits them without choking on commas

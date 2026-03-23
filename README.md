@@ -69,7 +69,7 @@ Parse a `Set-Cookie` header string into an object with all cookie attributes.
 
 ```js
 parseSetCookie(
-  "id=abc; Domain=example.com; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=3600",
+  "id=abc; Domain=example.com; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=3600; Partitioned; Priority=High",
 );
 // {
 //   name: "id",
@@ -80,6 +80,8 @@ parseSetCookie(
 //   secure: true,
 //   sameSite: "lax",
 //   maxAge: 3600,
+//   partitioned: true,
+//   priority: "high",
 // }
 ```
 

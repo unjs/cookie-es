@@ -5,6 +5,7 @@
 
 import { describe, it, expect } from "vitest";
 import { parseSetCookie } from "../src";
+import { parseSetCookie as parseSetCookieLegacy } from "../src/set-cookie/parse.ts";
 
 describe("parseSetCookie", () => {
   it("should parse a simple set-cookie header", () => {
@@ -167,6 +168,81 @@ describe("parseSetCookie", () => {
     expect(parseSetCookie("foo=bar; SameSite")).toStrictEqual({
       name: "foo",
       value: "bar",
+    });
+  });
+
+  it("should lowercase sameSite values", () => {
+    expect(parseSetCookie("foo=bar; SameSite=Strict")).toStrictEqual({
+      name: "foo",
+      value: "bar",
+      sameSite: "strict",
+    });
+
+    expect(parseSetCookie("foo=bar; SameSite=None")).toStrictEqual({
+      name: "foo",
+      value: "bar",
+      sameSite: "none",
+    });
+  });
+
+  it("should lowercase priority values", () => {
+    expect(parseSetCookie("foo=bar; Priority=Low")).toStrictEqual({
+      name: "foo",
+      value: "bar",
+      priority: "low",
+    });
+  });
+});
+
+describe("parseSetCookieLegacy", () => {
+  it("should return undefined for forbidden cookie names", () => {
+    expect(parseSetCookieLegacy("__proto__=evil")).toBeUndefined();
+    expect(parseSetCookieLegacy("constructor=evil")).toBeUndefined();
+    expect(parseSetCookieLegacy("toString=evil")).toBeUndefined();
+  });
+
+  it("should skip forbidden attribute keys", () => {
+    expect(parseSetCookieLegacy("foo=bar; __proto__=evil; constructor=evil")).toStrictEqual({
+      name: "foo",
+      value: "bar",
+    });
+  });
+
+  it("should parse partitioned attribute", () => {
+    expect(parseSetCookieLegacy("foo=bar; Partitioned")).toStrictEqual({
+      name: "foo",
+      value: "bar",
+      partitioned: true,
+    });
+  });
+
+  it("should guard against NaN max-age", () => {
+    expect(parseSetCookieLegacy("foo=bar; Max-Age=abc")).toStrictEqual({
+      name: "foo",
+      value: "bar",
+    });
+  });
+
+  it("should guard against invalid expires", () => {
+    expect(parseSetCookieLegacy("foo=bar; Expires=not-a-date")).toStrictEqual({
+      name: "foo",
+      value: "bar",
+    });
+  });
+
+  it("should lowercase sameSite values", () => {
+    expect(parseSetCookieLegacy("foo=bar; SameSite=Strict")).toStrictEqual({
+      name: "foo",
+      value: "bar",
+      sameSite: "strict",
+    });
+  });
+
+  it("should parse priority attribute", () => {
+    expect(parseSetCookieLegacy("foo=bar; Priority=High")).toStrictEqual({
+      name: "foo",
+      value: "bar",
+      priority: "high",
     });
   });
 });

@@ -58,5 +58,19 @@ export interface SetCookie {
    */
   sameSite?: true | false | "lax" | "strict" | "none" | undefined;
 
+  /**
+   * Indicates that the cookie should be stored using partitioned storage
+   *
+   * See https://developer.mozilla.org/en-US/docs/Web/Privacy/Privacy_sandbox/Partitioned_cookies
+   */
+  partitioned?: boolean | undefined;
+
+  /**
+   * Indicates the priority of the cookie
+   *
+   * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#prioritylow_medium_high
+   */
+  priority?: "low" | "medium" | "high" | undefined;
+
   [key: string]: unknown;
 }
