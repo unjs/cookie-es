@@ -10,29 +10,124 @@
 
 <!-- /automd -->
 
-ESM ready [`Cookie`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cookie) and [`Set-Cookie`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie) parser and serializer based on [cookie](https://github.com/jshttp/cookie) and [set-cookie-parser](https://github.com/nfriedly/set-cookie-parser) with built-in types.
+ESM-ready [`Cookie`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cookie) and [`Set-Cookie`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie) parser and serializer based on [cookie](https://github.com/jshttp/cookie) and [set-cookie-parser](https://github.com/nfriedly/set-cookie-parser) with built-in TypeScript types.
 
-## Usage
-
-Install:
+## Install
 
 ```sh
 # ✨ Auto-detect (npm, yarn, pnpm, bun, deno)
 npx nypm install cookie-es
 ```
 
-Import:
+## Import
 
 **ESM** (Node.js, Bun, Deno)
 
 ```js
-import { parse, serialize, parseSetCookie, splitSetCookieString } from "cookie-es";
+import {
+  parse,
+  parseSetCookie,
+  serialize,
+  stringifyCookie,
+  splitSetCookieString,
+} from "cookie-es";
 ```
 
 **CDN** (Deno, Bun and Browsers)
 
 ```js
-import { parse, serialize, parseSetCookie, splitSetCookieString } from "https://esm.sh/cookie-es";
+import {
+  parse,
+  parseSetCookie,
+  serialize,
+  stringifyCookie,
+  splitSetCookieString,
+} from "https://esm.sh/cookie-es";
+```
+
+## API
+
+### `parse(str, options?)`
+
+Parse a `Cookie` header string into an object. First occurrence wins for duplicate names.
+
+```js
+parse("foo=bar; equation=E%3Dmc%5E2");
+// { foo: "bar", equation: "E=mc^2" }
+
+// Custom decoder
+parse("foo=bar", { decode: (v) => v });
+
+// Only parse specific keys
+parse("a=1; b=2; c=3", { filter: (key) => key !== "b" });
+// { a: "1", c: "3" }
+```
+
+### `parseSetCookie(str, options?)`
+
+Parse a `Set-Cookie` header string into an object with all cookie attributes.
+
+```js
+parseSetCookie(
+  "id=abc; Domain=example.com; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=3600",
+);
+// {
+//   name: "id",
+//   value: "abc",
+//   domain: "example.com",
+//   path: "/",
+//   httpOnly: true,
+//   secure: true,
+//   sameSite: "lax",
+//   maxAge: 3600,
+// }
+```
+
+Supports `decode` and `filter` options same as `parse`.
+
+### `serialize(name, value, options?)`
+
+Serialize a cookie name-value pair into a `Set-Cookie` header string.
+
+```js
+serialize("foo", "bar", { httpOnly: true, secure: true, maxAge: 3600 });
+// "foo=bar; Max-Age=3600; HttpOnly; Secure"
+
+// Also accepts a cookie object
+serialize({
+  name: "foo",
+  value: "bar",
+  domain: "example.com",
+  path: "/",
+  sameSite: "lax",
+});
+// "foo=bar; Domain=example.com; Path=/; SameSite=Lax"
+```
+
+Supported attributes: `maxAge`, `expires`, `domain`, `path`, `httpOnly`, `secure`, `sameSite`, `priority`, `partitioned`. Use `encode` option for custom value encoding (default: `encodeURIComponent`).
+
+### `stringifyCookie(cookies, options?)`
+
+Stringify a cookies object into an HTTP `Cookie` header string.
+
+```js
+stringifyCookie({ foo: "bar", baz: "qux" });
+// "foo=bar; baz=qux"
+```
+
+### `splitSetCookieString(input)`
+
+Split comma-joined `Set-Cookie` headers into individual strings. Correctly handles commas within cookie attributes like `Expires` dates.
+
+```js
+splitSetCookieString(
+  "foo=bar; Expires=Thu, 01 Jan 2026 00:00:00 GMT, baz=qux",
+);
+// ["foo=bar; Expires=Thu, 01 Jan 2026 00:00:00 GMT", "baz=qux"]
+
+// Also accepts an array
+splitSetCookieString(["a=1, b=2", "c=3"]);
+// ["a=1", "b=2", "c=3"]
 ```
 
 ## Parsing Options
