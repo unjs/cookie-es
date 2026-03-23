@@ -85,7 +85,7 @@ parseSetCookie(
 // }
 ```
 
-Supports `decode` and `filter` options same as `parse`.
+Supports `decode` option (custom function or `false` to skip decoding). Returns `undefined` for cookies with forbidden names (prototype pollution protection).
 
 ### `serialize(name, value, options?)`
 

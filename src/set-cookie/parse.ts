@@ -1,132 +1,142 @@
-// Based on https://github.com/nfriedly/set-cookie-parser (MIT)
+// Based on https://github.com/nfriedly/set-cookie-parser (MIT) and https://github.com/jshttp/cookie (MIT)
 // Copyright (c) 2015 Nathan Friedly <nathan@nfriedly.com> (http://nfriedly.com/)
-// Last sync: v3.1.0
+// Copyright (c) 2012-2014 Roman Shtylman <shtylman@gmail.com>
+// Copyright (c) 2015 Douglas Christopher Wilson <doug@somethingdoug.com>
 
 import type { SetCookie, SetCookieParseOptions } from "./types.ts";
+import { endIndex, eqIndex, valueSlice } from "../_utils.ts";
+
+/**
+ * RegExp to match max-age-value in RFC 6265 sec 5.6.2
+ */
+const maxAgeRegExp = /^-?\d+$/;
 
 /**
  * Parse a [Set-Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie) header string into an object.
  */
 export function parseSetCookie(
-  setCookieValue: string,
+  str: string,
   options?: SetCookieParseOptions,
 ): SetCookie | undefined {
-  const parts = (setCookieValue || "")
-    .split(";")
-    .filter((str) => typeof str === "string" && !!str.trim());
+  const len = str.length;
+  const _endIdx = endIndex(str, 0, len);
+  const eqIdx = eqIndex(str, 0, _endIdx);
 
-  const nameValuePairStr = parts.shift() || "";
-  const parsed = _parseNameValuePair(nameValuePairStr);
-
-  const name = parsed.name;
-
-  if (_isForbiddenKey(name)) {
+  // RFC 6265bis sec 5.2: no "=" means name is empty, value is the whole string
+  const name = eqIdx === -1 ? "" : valueSlice(str, 0, eqIdx);
+  if (name && _isForbiddenKey(name)) {
     return undefined;
   }
 
-  let value = parsed.value;
-  try {
-    value = options?.decode === false ? value : (options?.decode || decodeURIComponent)(value);
-  } catch {
-    // Fallback to undecoded value
+  let value =
+    eqIdx === -1
+      ? valueSlice(str, 0, _endIdx)
+      : valueSlice(str, eqIdx + 1, _endIdx);
+  if (options?.decode !== false) {
+    value = _decode(value, options?.decode);
   }
 
-  const cookie: SetCookie = {
-    name: name,
-    value: value,
-  };
+  const setCookie: SetCookie = { name, value };
 
-  for (const part of parts) {
-    const sides = part.split("=");
-    const partKey = (sides.shift() || "").trimStart().toLowerCase();
-    const partValue = sides.join("=").trim();
-    if (_isForbiddenKey(partKey)) {
+  let index = _endIdx + 1;
+  while (index < len) {
+    const endIdx = endIndex(str, index, len);
+    const eqIdx = eqIndex(str, index, endIdx);
+    const attr =
+      eqIdx === -1
+        ? valueSlice(str, index, endIdx)
+        : valueSlice(str, index, eqIdx);
+    const val =
+      eqIdx === -1 ? undefined : valueSlice(str, eqIdx + 1, endIdx);
+    const attrLower = attr.toLowerCase();
+
+    if (_isForbiddenKey(attrLower)) {
+      index = endIdx + 1;
       continue;
     }
-    switch (partKey) {
-      case "expires": {
-        const date = new Date(partValue);
-        if (!Number.isNaN(date.getTime())) {
-          cookie.expires = date;
-        }
-        break;
-      }
-      case "max-age": {
-        const n = Number.parseInt(partValue, 10);
-        if (!Number.isNaN(n)) {
-          cookie.maxAge = n;
-        }
+
+    switch (attrLower) {
+      case "httponly": {
+        setCookie.httpOnly = true;
         break;
       }
       case "secure": {
-        cookie.secure = true;
-        break;
-      }
-      case "httponly": {
-        cookie.httpOnly = true;
-        break;
-      }
-      case "samesite": {
-        cookie.sameSite = _parseSameSite(partValue);
+        setCookie.secure = true;
         break;
       }
       case "partitioned": {
-        cookie.partitioned = true;
+        setCookie.partitioned = true;
+        break;
+      }
+      case "domain": {
+        setCookie.domain = val;
+        break;
+      }
+      case "path": {
+        setCookie.path = val;
+        break;
+      }
+      case "max-age": {
+        if (val && maxAgeRegExp.test(val)) setCookie.maxAge = Number(val);
+        break;
+      }
+      case "expires": {
+        if (!val) break;
+        const date = new Date(val);
+        if (!Number.isNaN(date.getTime())) setCookie.expires = date;
         break;
       }
       case "priority": {
-        cookie.priority = _parsePriority(partValue);
+        if (!val) break;
+        const priority = val.toLowerCase();
+        if (
+          priority === "low" ||
+          priority === "medium" ||
+          priority === "high"
+        ) {
+          setCookie.priority = priority;
+        }
+        break;
+      }
+      case "samesite": {
+        if (!val) break;
+        const sameSite = val.toLowerCase();
+        if (
+          sameSite === "lax" ||
+          sameSite === "strict" ||
+          sameSite === "none"
+        ) {
+          setCookie.sameSite = sameSite;
+        }
         break;
       }
       default: {
-        if (partKey) {
-          cookie[partKey] = partValue;
+        if (attrLower) {
+          setCookie[attrLower] = val;
         }
       }
     }
+
+    index = endIdx + 1;
   }
 
-  return cookie;
+  return setCookie;
 }
 
 // --- Internal Utils ---
-
-/** Parses name-value-pair according to rfc6265bis draft */
-function _parseNameValuePair(nameValuePairStr: string) {
-  let name = "";
-  let value = "";
-  const nameValueArr = nameValuePairStr.split("=");
-  if (nameValueArr.length > 1) {
-    name = nameValueArr.shift()!;
-    // Everything after the first =, joined by a "=" if there was more than one part
-    value = nameValueArr.join("=");
-  } else {
-    value = nameValuePairStr;
-  }
-
-  return { name: name, value: value };
-}
 
 function _isForbiddenKey(key: string): boolean {
   return !key || key in {};
 }
 
-const _sameSiteValues = new Set(["strict", "lax", "none"]);
-
-function _parseSameSite(value: string): SetCookie["sameSite"] {
-  const lower = value.toLowerCase();
-  if (_sameSiteValues.has(lower)) {
-    return lower as "strict" | "lax" | "none";
+function _decode(
+  value: string,
+  decode?: ((value: string) => string) | undefined,
+): string {
+  try {
+    return (decode || decodeURIComponent)(value);
+  } catch {
+    return value;
   }
-  return undefined;
 }
 
-const _priorityValues = new Set(["low", "medium", "high"]);
-
-function _parsePriority(value: string): SetCookie["priority"] {
-  const lower = value.toLowerCase();
-  if (_priorityValues.has(lower)) {
-    return lower as "low" | "medium" | "high";
-  }
-  return undefined;
-}

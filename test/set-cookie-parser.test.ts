@@ -1,11 +1,9 @@
 // Based on https://github.com/jshttp/cookie (MIT)
 // Copyright (c) 2012-2014 Roman Shtylman <shtylman@gmail.com>
 // Copyright (c) 2015 Douglas Christopher Wilson <doug@somethingdoug.com>
-// Last sync: e264dfa
 
 import { describe, it, expect } from "vitest";
 import { parseSetCookie } from "../src";
-import { parseSetCookie as parseSetCookieLegacy } from "../src/set-cookie/parse.ts";
 
 describe("parseSetCookie", () => {
   it("should parse a simple set-cookie header", () => {
@@ -24,7 +22,7 @@ describe("parseSetCookie", () => {
       name: "foo",
       value: "bar",
       path: "/",
-      expires: new Date("Tue Jul 01 2025 06:01:11 GMT-0400 (EDT)"),
+      expires: new Date("Tue, 01 Jul 2025 10:01:11 GMT"),
       maxAge: 1000,
       domain: ".example.com",
       secure: true,
@@ -84,6 +82,8 @@ describe("parseSetCookie", () => {
       sameSite: "none",
       secure: true,
     });
+
+    expect(parseSetCookie("foobar")).toStrictEqual({ name: "", value: "foobar" });
   });
 
   it("should trim attribute values", () => {
@@ -192,114 +192,37 @@ describe("parseSetCookie", () => {
       priority: "low",
     });
   });
-});
 
-describe("parseSetCookieLegacy", () => {
   it("should return undefined for forbidden cookie names", () => {
-    expect(parseSetCookieLegacy("__proto__=evil")).toBeUndefined();
-    expect(parseSetCookieLegacy("constructor=evil")).toBeUndefined();
-    expect(parseSetCookieLegacy("toString=evil")).toBeUndefined();
+    expect(parseSetCookie("__proto__=evil")).toBeUndefined();
+    expect(parseSetCookie("constructor=evil")).toBeUndefined();
+    expect(parseSetCookie("toString=evil")).toBeUndefined();
   });
 
   it("should skip forbidden attribute keys", () => {
-    expect(parseSetCookieLegacy("foo=bar; __proto__=evil; constructor=evil")).toStrictEqual({
+    expect(parseSetCookie("foo=bar; __proto__=evil; constructor=evil")).toStrictEqual({
       name: "foo",
       value: "bar",
-    });
-  });
-
-  it("should parse partitioned attribute", () => {
-    expect(parseSetCookieLegacy("foo=bar; Partitioned")).toStrictEqual({
-      name: "foo",
-      value: "bar",
-      partitioned: true,
-    });
-  });
-
-  it("should guard against NaN max-age", () => {
-    expect(parseSetCookieLegacy("foo=bar; Max-Age=abc")).toStrictEqual({
-      name: "foo",
-      value: "bar",
-    });
-  });
-
-  it("should guard against invalid expires", () => {
-    expect(parseSetCookieLegacy("foo=bar; Expires=not-a-date")).toStrictEqual({
-      name: "foo",
-      value: "bar",
-    });
-  });
-
-  it("should lowercase sameSite values", () => {
-    expect(parseSetCookieLegacy("foo=bar; SameSite=Strict")).toStrictEqual({
-      name: "foo",
-      value: "bar",
-      sameSite: "strict",
-    });
-  });
-
-  it("should parse priority attribute", () => {
-    expect(parseSetCookieLegacy("foo=bar; Priority=High")).toStrictEqual({
-      name: "foo",
-      value: "bar",
-      priority: "high",
-    });
-  });
-
-  it("should parse a complex set-cookie header", () => {
-    expect(
-      parseSetCookieLegacy(
-        "foo=bar; Max-Age=1000; Domain=.example.com; Path=/; Expires=Tue, 01 Jul 2025 10:01:11 GMT; HttpOnly; Secure",
-      ),
-    ).toStrictEqual({
-      name: "foo",
-      value: "bar",
-      path: "/",
-      expires: new Date("Tue, 01 Jul 2025 10:01:11 GMT"),
-      maxAge: 1000,
-      domain: ".example.com",
-      secure: true,
-      httpOnly: true,
     });
   });
 
   it("should store unknown attributes on cookie object", () => {
-    expect(parseSetCookieLegacy("foo=bar; customattr=customvalue")).toStrictEqual({
+    expect(parseSetCookie("foo=bar; customattr=customvalue")).toStrictEqual({
       name: "foo",
       value: "bar",
       customattr: "customvalue",
     });
   });
 
-  it("should return undefined for cookie without = in name-value pair", () => {
-    expect(parseSetCookieLegacy("foobar")).toBeUndefined();
-  });
-
-  it("should set sameSite to undefined for invalid values", () => {
-    const result = parseSetCookieLegacy("foo=bar; SameSite=Invalid");
-    expect(result).toBeDefined();
-    expect(result!.name).toBe("foo");
-    expect(result!.value).toBe("bar");
-    expect(result!.sameSite).toBeUndefined();
-  });
-
-  it("should set priority to undefined for invalid values", () => {
-    const result = parseSetCookieLegacy("foo=bar; Priority=Invalid");
-    expect(result).toBeDefined();
-    expect(result!.name).toBe("foo");
-    expect(result!.value).toBe("bar");
-    expect(result!.priority).toBeUndefined();
-  });
-
   it("should decode values by default", () => {
-    expect(parseSetCookieLegacy("foo=hello%20world")).toStrictEqual({
+    expect(parseSetCookie("foo=hello%20world")).toStrictEqual({
       name: "foo",
       value: "hello world",
     });
   });
 
   it("should skip decode when decode is false", () => {
-    expect(parseSetCookieLegacy("foo=hello%20world", { decode: false })).toStrictEqual({
+    expect(parseSetCookie("foo=hello%20world", { decode: false })).toStrictEqual({
       name: "foo",
       value: "hello%20world",
     });
