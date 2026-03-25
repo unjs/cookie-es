@@ -21,8 +21,6 @@ npx nypm install cookie-es
 
 ## Import
 
-**ESM** (Node.js, Bun, Deno)
-
 ```js
 import {
   parseCookie,
@@ -31,18 +29,6 @@ import {
   stringifyCookie,
   splitSetCookieString,
 } from "cookie-es";
-```
-
-**CDN** (Deno, Bun and Browsers)
-
-```js
-import {
-  parseCookie,
-  parseSetCookie,
-  serializeCookie,
-  stringifyCookie,
-  splitSetCookieString,
-} from "https://esm.sh/cookie-es";
 ```
 
 ## API
