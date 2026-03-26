@@ -86,7 +86,6 @@ describe("cookie.parse(str, options)", () => {
         }),
       ).toMatchObject({ foo: "bar" });
     });
-
   });
 
   describe('with "decodeName" option', () => {
@@ -112,6 +111,14 @@ describe("cookie.parse(str, options)", () => {
           decodeName: decodeURIComponent,
         }),
       ).toMatchObject({ "user@host": "val ue" });
+    });
+
+    it("should propagate errors from decodeName", () => {
+      expect(() =>
+        parse("bad%ZZname=bar", {
+          decodeName: decodeURIComponent,
+        }),
+      ).toThrow(URIError);
     });
 
     it("should apply filter after decodeName", () => {

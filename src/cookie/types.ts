@@ -20,18 +20,14 @@ export interface CookieParseOptions {
   decode?: (str: string) => string | undefined;
 
   /**
-   * Specifies a function that will be used to decode a cookie-name.
-   *
-   * Browsers may URL-encode special characters in cookie names (e.g. `@` becomes `%40`).
-   * By default, cookie names are returned as-is from the `Cookie` header. Use this option
-   * to decode them — for example, with `decodeURIComponent`.
-   *
-   * @default undefined (no decoding)
+   * Custom function to decode cookie names. By default, names are not decoded.
+   * Errors are not caught — if your function can throw, wrap it in a try/catch.
    */
   decodeName?: (str: string) => string;
 
   /**
    * Custom function to filter parsing specific keys.
+   * When used with `decodeName`, receives the decoded name.
    */
   filter?(key: string): boolean;
 
