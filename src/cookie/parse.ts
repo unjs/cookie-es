@@ -45,7 +45,8 @@ export function parse(str: string, options?: CookieParseOptions): Cookies | Mult
       continue;
     }
 
-    const key = valueSlice(str, index, eqIdx);
+    const rawKey = valueSlice(str, index, eqIdx);
+    const key = options?.decodeName ? options.decodeName(rawKey) : rawKey;
 
     if (options?.filter && !options.filter(key)) {
       index = endIdx + 1;

@@ -87,6 +87,44 @@ describe("cookie.parse(str, options)", () => {
       ).toMatchObject({ foo: "bar" });
     });
 
+  });
+
+  describe('with "decodeName" option', () => {
+    it("should decode URL-encoded cookie names", () => {
+      expect(
+        parse("user%40test.local=bar", {
+          decodeName: decodeURIComponent,
+        }),
+      ).toMatchObject({ "user@test.local": "bar" });
+    });
+
+    it("should not affect names without encoding", () => {
+      expect(
+        parse("foo=bar", {
+          decodeName: decodeURIComponent,
+        }),
+      ).toMatchObject({ foo: "bar" });
+    });
+
+    it("should decode names and values independently", () => {
+      expect(
+        parse("user%40host=val%20ue", {
+          decodeName: decodeURIComponent,
+        }),
+      ).toMatchObject({ "user@host": "val ue" });
+    });
+
+    it("should apply filter after decodeName", () => {
+      expect(
+        parse("user%40a=1;user%40b=2", {
+          decodeName: decodeURIComponent,
+          filter: (key) => key === "user@a",
+        }),
+      ).toEqual({ "user@a": "1" });
+    });
+  });
+
+  describe('with "filter" option', () => {
     it("parse filter key", () => {
       expect(
         parse("a=1;b=2", {
