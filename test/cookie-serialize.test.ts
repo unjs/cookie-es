@@ -19,6 +19,15 @@ describe("serialize(name, value)", () => {
     expect(serialize("foo", "")).toBe("foo=");
   });
 
+  it("should coerce non-string values to string", () => {
+    expect(serialize("foo", 42)).toBe("foo=42");
+    expect(serialize("foo", true)).toBe("foo=true");
+    expect(serialize("foo", null)).toBe("foo=");
+    expect(serialize("foo", undefined)).toBe("foo=");
+    expect(serialize("foo", { bar: 1 })).toBe("foo=%5Bobject%20Object%5D");
+    expect(serialize("foo", 42, { encode: (v) => `prefix_${v}` })).toBe("foo=prefix_42");
+  });
+
   it("should throw for invalid name", () => {
     expect(() => serialize("foo\n", "bar")).toThrow(/argument name is invalid/);
     expect(() => serialize("foo\u280A", "bar")).toThrow(/argument name is invalid/);
@@ -338,5 +347,34 @@ describe("serialize(setCookie)", () => {
     expect(serialize({ name: "foo", value: "bar baz" }, { encode: (v) => btoa(v) })).toBe(
       "foo=YmFyIGJheg==",
     );
+  });
+
+  it("should serialize SetCookie with all attributes", () => {
+    expect(
+      serialize({
+        name: "foo",
+        value: "bar",
+        domain: "example.com",
+        path: "/",
+        httpOnly: true,
+        secure: true,
+        sameSite: "lax",
+        maxAge: 3600,
+        partitioned: true,
+        priority: "high",
+      }),
+    ).toBe(
+      "foo=bar; Max-Age=3600; Domain=example.com; Path=/; HttpOnly; Secure; Partitioned; Priority=High; SameSite=Lax",
+    );
+  });
+
+  it("should serialize SetCookie with custom encoder", () => {
+    expect(serialize({ name: "foo", value: "42" }, { encode: (v) => `prefix_${v}` })).toBe(
+      "foo=prefix_42",
+    );
+  });
+
+  it("should not confuse options object with SetCookie object", () => {
+    expect(serialize("foo", "bar", { httpOnly: true })).toBe("foo=bar; HttpOnly");
   });
 });

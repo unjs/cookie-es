@@ -87,7 +87,11 @@ const pathValueRegExp = /^[\u0020-\u003A\u003C-\u007E]*$/;
 const __toString = Object.prototype.toString;
 
 /**
- * Stringifies an object into an HTTP `Cookie` header.
+ * Stringify a cookies object into an HTTP `Cookie` header string.
+ *
+ * @param cookie - An object of cookie name-value pairs.
+ * @param options - Stringify options (`encode`).
+ * @returns A `Cookie` header string (e.g. `"foo=bar; baz=qux"`).
  */
 export function stringifyCookie(cookie: Cookies, options?: CookieStringifyOptions): string {
   const enc = options?.encode || encodeURIComponent;
@@ -116,23 +120,31 @@ export function stringifyCookie(cookie: Cookies, options?: CookieStringifyOption
 }
 
 /**
- * Serialize data into a cookie header.
+ * Serialize a cookie into a `Set-Cookie` header string.
  *
- * Serialize a name value pair into a cookie string suitable for
- * http headers. An optional options object specifies cookie parameters.
+ * Accepts either a name-value pair with options or a `SetCookie` object.
+ * Non-string values are coerced to strings. Validates name, value, domain,
+ * and path against RFC 6265bis.
  *
- * serialize('foo', 'bar', { httpOnly: true })
- *   => "foo=bar; httpOnly"
+ * @example
+ * ```js
+ * serialize("foo", "bar", { httpOnly: true });
+ * // => "foo=bar; HttpOnly"
+ *
+ * serialize({ name: "foo", value: "bar", secure: true });
+ * // => "foo=bar; Secure"
+ * ```
  */
 export function serialize(cookie: SetCookie, options?: CookieStringifyOptions): string;
-export function serialize(name: string, val: string, options?: CookieSerializeOptions): string;
+export function serialize(name: string, val: unknown, options?: CookieSerializeOptions): string;
 export function serialize(
   _name: string | SetCookie,
-  _val?: string | CookieStringifyOptions,
+  _val?: unknown,
   _opts?: CookieSerializeOptions,
 ): string {
-  const cookie = typeof _name === "object" ? _name : { ..._opts, name: _name, value: String(_val) };
-  const options = typeof _val === "object" ? _val : _opts;
+  const cookie =
+    typeof _name === "object" ? _name : { ..._opts, name: _name, value: String(_val ?? "") };
+  const options = typeof _name === "object" ? (_val as CookieStringifyOptions) : _opts;
   const enc = options?.encode || encodeURIComponent;
 
   if (!cookieNameRegExp.test(cookie.name)) {

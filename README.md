@@ -92,6 +92,8 @@ serializeCookie({
 // "foo=bar; Domain=example.com; Path=/; SameSite=Lax"
 ```
 
+Non-string values are coerced to strings (`null` and `undefined` become empty string).
+
 Supported attributes: `maxAge`, `expires`, `domain`, `path`, `httpOnly`, `secure`, `sameSite`, `priority`, `partitioned`. Use `encode` option for custom value encoding (default: `encodeURIComponent`).
 
 > [!NOTE]
