@@ -53,6 +53,13 @@ export interface CookieStringifyOptions {
    * @default encodeURIComponent
    */
   encode?: (str: string) => string;
+
+  /**
+   * Specifies a function that will be used to coerce non-string values to a string.
+   *
+   * @default JSON.stringify
+   */
+  stringify?: (value: unknown) => string;
 }
 
 /**

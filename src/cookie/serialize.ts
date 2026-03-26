@@ -143,8 +143,12 @@ export function serialize(
   _opts?: CookieSerializeOptions,
 ): string {
   const cookie =
-    typeof _name === "object" ? _name : { ..._opts, name: _name, value: String(_val ?? "") };
+    typeof _name === "object" ? _name : { ..._opts, name: _name, value: "" as string | undefined };
   const options = typeof _name === "object" ? (_val as CookieStringifyOptions) : _opts;
+  if (typeof _name !== "object") {
+    const str = options?.stringify || JSON.stringify;
+    cookie.value = _val == undefined ? "" : typeof _val === "string" ? _val : str(_val);
+  }
   const enc = options?.encode || encodeURIComponent;
 
   if (!cookieNameRegExp.test(cookie.name)) {

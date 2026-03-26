@@ -24,8 +24,13 @@ describe("serialize(name, value)", () => {
     expect(serialize("foo", true)).toBe("foo=true");
     expect(serialize("foo", null)).toBe("foo=");
     expect(serialize("foo", undefined)).toBe("foo=");
-    expect(serialize("foo", { bar: 1 })).toBe("foo=%5Bobject%20Object%5D");
+    expect(serialize("foo", { bar: 1 })).toBe("foo=%7B%22bar%22%3A1%7D");
+    expect(serialize("foo", [1, 2])).toBe("foo=%5B1%2C2%5D");
     expect(serialize("foo", 42, { encode: (v) => `prefix_${v}` })).toBe("foo=prefix_42");
+    expect(serialize("foo", { bar: 1 }, { stringify: String })).toBe("foo=%5Bobject%20Object%5D");
+    expect(serialize("foo", { bar: 1 }, { stringify: (v) => `custom:${JSON.stringify(v)}` })).toBe(
+      "foo=custom%3A%7B%22bar%22%3A1%7D",
+    );
   });
 
   it("should throw for invalid name", () => {
