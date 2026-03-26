@@ -3,10 +3,15 @@
 // Last sync: v3.1.0
 
 /**
- * Set-Cookie header field-values are sometimes comma joined in one string. This splits them without choking on commas
- * that are within a single set-cookie field-value, such as in the Expires portion.
+ * Split comma-joined `Set-Cookie` header strings into individual cookie strings.
  *
- * See https://tools.ietf.org/html/rfc2616#section-4.2
+ * Correctly handles commas within cookie attributes like `Expires` dates
+ * by checking for `=` after a comma to determine if it's a cookie separator.
+ *
+ * @param cookiesString - A comma-joined `Set-Cookie` string or array of strings.
+ * @returns An array of individual `Set-Cookie` strings.
+ *
+ * @see https://tools.ietf.org/html/rfc2616#section-4.2
  */
 export function splitSetCookieString(cookiesString: string | string[]): string[] {
   if (Array.isArray(cookiesString)) {

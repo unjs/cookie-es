@@ -13,10 +13,14 @@ const NullObject = /* @__PURE__ */ (() => {
 })() as unknown as { new (): any };
 
 /**
- * Parse a `Cookie` header.
+ * Parse a `Cookie` header string into an object.
  *
- * Parse the given cookie header string into an object
- * The object has the various cookies as keys(names) => values
+ * The object has cookie names as keys and decoded values as values.
+ * First occurrence wins for duplicate names unless `allowMultiple` is set.
+ *
+ * @param str - The `Cookie` header string to parse.
+ * @param options - Parsing options (`decode`, `filter`, `allowMultiple`).
+ * @returns A prototype-less object of cookie name-value pairs.
  */
 export function parse(
   str: string,

@@ -13,7 +13,14 @@ const maxAgeRegExp = /^-?\d+$/;
 const _nullProto = Object.getPrototypeOf({}) as Record<string, unknown>;
 
 /**
- * Parse a [Set-Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie) header string into an object.
+ * Parse a [`Set-Cookie`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie) header string into an object.
+ *
+ * Returns `undefined` for cookies with forbidden names (prototype pollution protection)
+ * or when both name and value are empty (RFC 6265bis sec 5.7).
+ *
+ * @param str - The `Set-Cookie` header string to parse.
+ * @param options - Parsing options (`decode`).
+ * @returns A `SetCookie` object with all parsed attributes, or `undefined`.
  */
 export function parseSetCookie(
   str: string,
