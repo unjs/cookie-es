@@ -10,7 +10,7 @@ import { COOKIE_MAX_AGE_LIMIT } from "../_utils.ts";
  * RegExp to match max-age-value in RFC 6265 sec 5.6.2
  */
 const maxAgeRegExp = /^-?\d+$/;
-const _nullProto = Object.getPrototypeOf({}) as Record<string, unknown>;
+const _nullProto = /* @__PURE__ */ Object.getPrototypeOf({}) as Record<string, unknown>;
 
 /**
  * Parse a [`Set-Cookie`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie) header string into an object.
