@@ -1,5 +1,17 @@
 # Changelog
 
+## v3.1.1
+
+[compare changes](https://github.com/unjs/cookie-es/compare/v3.1.0...v3.1.1)
+
+### 📦 Build
+
+- Avoid side-effects ([5ba9051](https://github.com/unjs/cookie-es/commit/5ba9051))
+
+### ❤️ Contributors
+
+- Pooya Parsa ([@pi0](https://github.com/pi0))
+
 ## v3.1.0
 
 [compare changes](https://github.com/unjs/cookie-es/compare/v3.0.1...v3.1.0)
