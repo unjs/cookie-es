@@ -33,6 +33,11 @@ describe("serialize(name, value)", () => {
     );
   });
 
+  it("should not treat null as object overload", () => {
+    // @ts-expect-error testing runtime null guard
+    expect(() => serialize(null)).toThrow(TypeError);
+  });
+
   it("should throw for invalid name", () => {
     expect(() => serialize("foo\n", "bar")).toThrow(/argument name is invalid/);
     expect(() => serialize("foo\u280A", "bar")).toThrow(/argument name is invalid/);

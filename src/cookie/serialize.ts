@@ -142,7 +142,7 @@ export function serialize(
   _a1?: unknown,
   _a2?: CookieSerializeOptions,
 ): string {
-  const isObj = typeof _a0 === "object";
+  const isObj = typeof _a0 === "object" && _a0 !== null;
   const options = isObj ? (_a1 as CookieStringifyOptions) : _a2;
   const stringify = options?.stringify || JSON.stringify;
   const cookie = isObj
