@@ -1,5 +1,30 @@
 # Changelog
 
+## v3.1.0
+
+[compare changes](https://github.com/unjs/cookie-es/compare/v3.0.1...v3.1.0)
+
+### 🚀 Enhancements
+
+- **serialize:** Support custom `stringify` option for value coercion ([6f659f8](https://github.com/unjs/cookie-es/commit/6f659f8))
+
+### 🩹 Fixes
+
+- Accept non-string values in serializeCookie ([55855c6](https://github.com/unjs/cookie-es/commit/55855c6))
+
+### 💅 Refactors
+
+- Optimize serialize arg resolution ([8597643](https://github.com/unjs/cookie-es/commit/8597643))
+
+### 🏡 Chore
+
+- Update docs ([26ea164](https://github.com/unjs/cookie-es/commit/26ea164))
+- Improve jsdocs ([89f659e](https://github.com/unjs/cookie-es/commit/89f659e))
+
+### ❤️ Contributors
+
+- Pooya Parsa ([@pi0](https://github.com/pi0))
+
 ## v3.0.1
 
 [compare changes](https://github.com/unjs/cookie-es/compare/v3.0.0...v3.0.1)
