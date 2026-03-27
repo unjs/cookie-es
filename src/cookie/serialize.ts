@@ -138,17 +138,21 @@ export function stringifyCookie(cookie: Cookies, options?: CookieStringifyOption
 export function serialize(cookie: SetCookie, options?: CookieStringifyOptions): string;
 export function serialize(name: string, val: unknown, options?: CookieSerializeOptions): string;
 export function serialize(
-  _name: string | SetCookie,
-  _val?: unknown,
-  _opts?: CookieSerializeOptions,
+  _a0: string | SetCookie,
+  _a1?: unknown,
+  _a2?: CookieSerializeOptions,
 ): string {
-  const cookie =
-    typeof _name === "object" ? _name : { ..._opts, name: _name, value: "" as string | undefined };
-  const options = typeof _name === "object" ? (_val as CookieStringifyOptions) : _opts;
-  if (typeof _name !== "object") {
-    const str = options?.stringify || JSON.stringify;
-    cookie.value = _val == undefined ? "" : typeof _val === "string" ? _val : str(_val);
-  }
+  const isObj = typeof _a0 === "object";
+  const options = isObj ? (_a1 as CookieStringifyOptions) : _a2;
+  const stringify = options?.stringify || JSON.stringify;
+  const cookie = isObj
+    ? _a0
+    : {
+        ..._a2,
+        name: _a0,
+        value: _a1 == undefined ? "" : typeof _a1 === "string" ? _a1 : stringify(_a1),
+      };
+
   const enc = options?.encode || encodeURIComponent;
 
   if (!cookieNameRegExp.test(cookie.name)) {
