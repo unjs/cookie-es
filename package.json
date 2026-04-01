@@ -28,7 +28,7 @@
     "dev": "vitest --coverage",
     "lint": "eslint --cache . && prettier -c src test",
     "lint:fix": "automd && eslint --cache . --fix && prettier -c src test -w",
-    "release": "pnpm test && pnpm build && changelogen --release --push && npm publish",
+    "release": "pnpm test && pnpm build && changelogen --release --push && npm publish --tag 1x",
     "test": "pnpm lint && vitest run --coverage"
   },
   "devDependencies": {
