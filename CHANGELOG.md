@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v2.0.1
+
+[compare changes](https://github.com/unjs/cookie-es/compare/v2.0.0...v2.0.1)
+
+### 🩹 Fixes
+
+- **parse:** Use null proto object ([98cdc84](https://github.com/unjs/cookie-es/commit/98cdc84))
+
+### 🏡 Chore
+
+- Update deps ([905b235](https://github.com/unjs/cookie-es/commit/905b235))
+
+### ❤️ Contributors
+
+- Pooya Parsa ([@pi0](https://github.com/pi0))
+
 ## v2.0.0
 
 [compare changes](https://github.com/unjs/cookie-es/compare/v1.2.2...v2.0.0)
