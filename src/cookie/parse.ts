@@ -4,6 +4,13 @@
 // Last sync: 84a156749b673dbfbf43679829b15be09fbd8988
 
 import type { CookieParseOptions } from "./types";
+
+const NullObject = /* @__PURE__ */ (() => {
+  const C = function () {};
+  C.prototype = Object.create(null);
+  return C;
+})() as unknown as { new (): any };
+
 /**
  * Parse an HTTP Cookie header string and returning an object of all cookie
  * name-value pairs.
@@ -19,7 +26,7 @@ export function parse(
     throw new TypeError("argument str must be a string");
   }
 
-  const obj = {};
+  const obj = new NullObject();
   const opt = options || {};
   const dec = opt.decode || decode;
 
