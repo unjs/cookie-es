@@ -20,7 +20,14 @@ export interface CookieParseOptions {
   decode?: (str: string) => string | undefined;
 
   /**
+   * Custom function to decode cookie names. By default, names are not decoded.
+   * Errors are not caught — if your function can throw, wrap it in a try/catch.
+   */
+  decodeName?: (str: string) => string;
+
+  /**
    * Custom function to filter parsing specific keys.
+   * When used with `decodeName`, receives the decoded name.
    */
   filter?(key: string): boolean;
 
