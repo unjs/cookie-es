@@ -25,7 +25,7 @@
     "@vitest/coverage-v8": "^4.1.2",
     "automd": "^0.4.3",
     "changelogen": "^0.6.2",
-    "cookie": "^1.1.1",
+    "cookie": "^2.0.1",
     "eslint-config-unjs": "^0.6.2",
     "magic-string": "^0.30.21",
     "mitata": "^1.0.34",
