@@ -263,6 +263,17 @@ describe("parseSetCookie", () => {
     });
   });
 
+  it("should not let unknown attributes overwrite the cookie name and value", () => {
+    expect(parseSetCookie("foo=bar; name=evil; value=evil")).toStrictEqual({
+      name: "foo",
+      value: "bar",
+    });
+    expect(parseSetCookie("foo=bar; Name=evil; VALUE=evil")).toStrictEqual({
+      name: "foo",
+      value: "bar",
+    });
+  });
+
   it("should decode values by default", () => {
     expect(parseSetCookie("foo=hello%20world")).toStrictEqual({
       name: "foo",

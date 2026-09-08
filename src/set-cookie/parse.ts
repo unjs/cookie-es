@@ -145,7 +145,14 @@ export function parseSetCookie(
         }
         default: {
           const attrLower = attr.toLowerCase();
-          if (attrLower && !(attrLower in _nullProto)) {
+          // `name` and `value` hold the cookie pair itself and must not be
+          // overwritten by an unrecognized attribute of the same name.
+          if (
+            attrLower &&
+            attrLower !== "name" &&
+            attrLower !== "value" &&
+            !(attrLower in _nullProto)
+          ) {
             setCookie[attrLower] = val;
           }
         }
