@@ -98,7 +98,7 @@ export function stringifyCookie(cookie: Cookies, options?: CookieStringifyOption
   const keys = Object.keys(cookie);
   let str = "";
 
-  for (const [i, name] of keys.entries()) {
+  for (const name of keys) {
     const val = cookie[name];
     if (val === undefined) continue;
 
@@ -112,7 +112,7 @@ export function stringifyCookie(cookie: Cookies, options?: CookieStringifyOption
       throw new TypeError(`cookie val is invalid: ${val}`);
     }
 
-    if (i > 0) str += "; ";
+    if (str) str += "; ";
     str += name + "=" + value;
   }
 

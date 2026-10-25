@@ -321,6 +321,12 @@ describe("stringifyCookie(cookies)", () => {
 
   it("should skip undefined values", () => {
     expect(stringifyCookie({ foo: "bar", baz: undefined as unknown as string })).toBe("foo=bar");
+    expect(
+      stringifyCookie({
+        first: undefined as unknown as string,
+        second: "val",
+      }),
+    ).toBe("second=val");
   });
 
   it("should return empty string for empty object", () => {
