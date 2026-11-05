@@ -275,6 +275,11 @@ describe("serialize(name, value, options)", () => {
     it("should validate __Secure- prefix case-insensitively", () => {
       expect(() => serialize("__secure-SID", "abc123")).toThrow();
     });
+
+    it("should validate a name that is only the __Secure- prefix", () => {
+      expect(() => serialize("__Secure-", "abc123")).toThrow();
+      expect(() => serialize("__Secure-", "abc123", { secure: true })).not.toThrow();
+    });
   });
 
   describe("__Host- prefix validation (RFC 6265bis)", () => {
@@ -298,6 +303,24 @@ describe("serialize(name, value, options)", () => {
 
     it("should allow valid __Host- cookie", () => {
       expect(() => serialize("__Host-SID", "abc123", { secure: true, path: "/" })).not.toThrow();
+    });
+
+    it("should require Secure for a short __Host- name", () => {
+      expect(() => serialize("__Host-a", "abc123", { path: "/" })).toThrow(
+        /must have the Secure attribute/,
+      );
+      expect(() => serialize("__Host-ab", "abc123", { path: "/" })).toThrow(
+        /must have the Secure attribute/,
+      );
+    });
+
+    it("should validate a name that is only the __Host- prefix", () => {
+      expect(() => serialize("__Host-", "abc123", { path: "/" })).toThrow();
+      expect(() => serialize("__Host-", "abc123", { secure: true })).toThrow();
+      expect(() =>
+        serialize("__Host-", "abc123", { secure: true, path: "/", domain: "example.com" }),
+      ).toThrow();
+      expect(() => serialize("__Host-", "abc123", { secure: true, path: "/" })).not.toThrow();
     });
 
     it("should validate __Host- prefix case-insensitively", () => {

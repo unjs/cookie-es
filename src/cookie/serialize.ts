@@ -177,7 +177,7 @@ export function serialize(
     }
     // RFC 6265bis sec 4.1.3: __Secure- prefix requires Secure
     if (
-      cookie.name.length > 9 &&
+      cookie.name.length >= 7 &&
       cookie.name.charCodeAt(0) === 95 /* _ */ &&
       cookie.name.charCodeAt(1) === 95 /* _ */
     ) {
@@ -190,7 +190,7 @@ export function serialize(
 
   // RFC 6265bis sec 4.1.3.2: __Host- prefix validation
   if (
-    cookie.name.length > 7 &&
+    cookie.name.length >= 7 &&
     cookie.name.charCodeAt(0) === 95 /* _ */ &&
     cookie.name.charCodeAt(1) === 95 /* _ */ &&
     cookie.name.toLowerCase().startsWith("__host-")
